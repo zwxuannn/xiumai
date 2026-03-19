@@ -1,0 +1,1775 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+    <title>绣脉 · 中国名绣非遗档案 · 基因图谱</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', '微软雅黑', system-ui, sans-serif;
+        }
+        body {
+            background-color: #faf7f2;
+            color: #2e241f;
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        :root {
+            --primary-burgundy: #822433;
+            --secondary-gold: #b48b5a;
+            --accent-ink: #3a2c29;
+            --paper: #fefcf7;
+            --border-light: #e1cfb6;
+            --soft-bg: #f3ede5;
+        }
+        .badge {
+            background: var(--primary-burgundy);
+            color: white;
+            padding: 0.25rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            display: inline-block;
+            letter-spacing: 0.5px;
+        }
+        h1, h2, h3 {
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+        h2 {
+            font-size: 2rem;
+            border-left: 6px solid var(--primary-burgundy);
+            padding-left: 1.2rem;
+            margin: 2.5rem 0 1.5rem 0;
+            color: var(--accent-ink);
+        }
+        h2 i {
+            color: var(--secondary-gold);
+            margin-right: 0.5rem;
+        }
+        .section-sub {
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            color: var(--secondary-gold);
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+        /* 导航 */
+        .navbar {
+            background: var(--paper);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            backdrop-filter: blur(4px);
+            background-color: rgba(254, 252, 247, 0.9);
+        }
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 300;
+            color: var(--primary-burgundy);
+        }
+        .logo span {
+            font-weight: 500;
+            color: var(--accent-ink);
+        }
+        .logo i {
+            color: var(--secondary-gold);
+            font-size: 2rem;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            font-size: 1.1rem;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--accent-ink);
+            transition: 0.2s;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 4px;
+        }
+        .nav-links a:hover {
+            border-bottom-color: var(--primary-burgundy);
+            color: var(--primary-burgundy);
+        }
+        /* hero */
+        .hero {
+            background: linear-gradient(97deg, #f3e9de 0%, #fdf9f4 100%);
+            padding: 3rem 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .hero-grid {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+        .hero-title {
+            flex: 1 1 300px;
+        }
+        .hero-title h1 {
+            font-size: 3.2rem;
+            line-height: 1.2;
+            font-weight: 300;
+            color: var(--primary-burgundy);
+        }
+        .hero-title h1 strong {
+            font-weight: 600;
+            color: var(--accent-ink);
+        }
+        .hero-desc {
+            font-size: 1.2rem;
+            margin: 1.5rem 0;
+            color: #4f423b;
+        }
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary-burgundy);
+        }
+        .hero-cover {
+            flex: 0 0 240px;
+            background: #d9c6b1;
+            border-radius: 100px 100px 30px 30px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            color: white;
+            background-image: radial-gradient(circle at 20px 20px, #b29e88, #7f5e4b);
+            box-shadow: 20px 20px 30px rgba(0,0,0,0.1);
+        }
+        .hero-cover i {
+            font-size: 5rem;
+            color: #ffdba0;
+        }
+        .hero-cover p {
+            font-size: 1rem;
+            margin-top: 0.8rem;
+            font-style: italic;
+        }
+        /* 卡片网格 (名绣入口) */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0 3rem;
+        }
+        .emb-card {
+            background: var(--paper);
+            border: 1px solid var(--border-light);
+            border-radius: 28px;
+            padding: 2rem 1.2rem 1.8rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.02);
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .emb-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 35px rgba(130, 36, 51, 0.1);
+            border-color: var(--secondary-gold);
+        }
+        .emb-card::after {
+            content: "⇧ 点击阅览绣种档案";
+            position: absolute;
+            bottom: -30px;
+            left: 0;
+            width: 100%;
+            background: var(--primary-burgundy);
+            color: white;
+            font-size: 0.8rem;
+            padding: 0.3rem 0;
+            opacity: 0;
+            transition: bottom 0.3s, opacity 0.3s;
+        }
+        .emb-card:hover::after {
+            bottom: 0;
+            opacity: 1;
+        }
+        .emb-icon {
+            font-size: 3.5rem;
+            color: var(--primary-burgundy);
+            margin-bottom: 1rem;
+        }
+        .emb-card h3 {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+        .emb-sub {
+            color: var(--secondary-gold);
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        .emb-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            justify-content: center;
+        }
+        .tag {
+            background: #e7d9cc;
+            padding: 0.2rem 0.9rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            color: #2e241f;
+        }
+        /* 地图样式 */
+        #china-map {
+            width: 100%;
+            height: 420px;
+            background: #f0e7de;
+            border-radius: 32px;
+            border: 2px solid white;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+            margin: 2rem 0 1rem;
+        }
+        .map-tip {
+            text-align: center;
+            color: var(--primary-burgundy);
+            font-weight: 500;
+        }
+        .active-embroidery {
+            background: var(--paper);
+            padding: 1.5rem;
+            border-radius: 28px;
+            margin: 1rem 0 2rem;
+            border: 1px solid var(--border-light);
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .active-embroidery .label {
+            background: var(--primary-burgundy);
+            color: white;
+            border-radius: 40px;
+            padding: 0.3rem 1.2rem;
+        }
+        .embroidery-detail {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        /* AI工坊 */
+        .ai-simulate {
+            background: #1f2c3a;
+            color: #ecf0f3;
+            border-radius: 24px;
+            padding: 1.2rem 2rem;
+            margin: 1.5rem 0;
+            display: inline-block;
+        }
+        .ai-simulate button {
+            background: var(--secondary-gold);
+            border: none;
+            color: #2e241f;
+            font-weight: bold;
+            padding: 0.6rem 2rem;
+            border-radius: 50px;
+            margin-left: 1rem;
+            cursor: pointer;
+        }
+        /* 模态框 (画中画) */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 1rem;
+        }
+        .modal-content {
+            background: var(--paper);
+            width: 90%;
+            max-width: 1100px;
+            max-height: 85vh;
+            border-radius: 48px;
+            box-shadow: 0 40px 60px rgba(0,0,0,0.3);
+            overflow-y: auto;
+            padding: 2.5rem;
+            position: relative;
+            border: 3px solid var(--border-light);
+            animation: modalFade 0.3s;
+        }
+        @keyframes modalFade {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 2.2rem;
+            font-size: 2.8rem;
+            cursor: pointer;
+            color: var(--primary-burgundy);
+            transition: 0.2s;
+            line-height: 1;
+        }
+        .close-modal:hover {
+            color: var(--accent-ink);
+            transform: scale(1.1);
+        }
+        /* 画中画内布局 */
+        .pip-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        .pip-visual {
+            background: var(--soft-bg);
+            border-radius: 36px;
+            padding: 2rem 1rem;
+            text-align: center;
+            border: 1px dashed var(--secondary-gold);
+        }
+        .pip-visual i {
+            font-size: 8rem;
+            color: var(--primary-burgundy);
+            opacity: 0.8;
+        }
+        .img-placeholder {
+            background: #d9c6b1;
+            height: 180px;
+            border-radius: 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 1rem 0;
+            background-image: repeating-linear-gradient(45deg, #bba88b33 0px, #bba88b33 15px, #cdb99c33 15px, #cdb99c33 30px);
+            padding: 0.5rem;
+        }
+        .img-placeholder img {
+            max-width: 100%;
+            max-height: 120px;
+            border-radius: 16px;
+            object-fit: contain;
+            background: white;
+        }
+        .info-section {
+            margin-bottom: 1.8rem;
+        }
+        .info-section h4 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--primary-burgundy);
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 0.4rem;
+            margin-bottom: 1rem;
+        }
+        .info-section p {
+            margin-bottom: 0.8rem;
+            color: #2e241f;
+        }
+        .info-section i {
+            color: var(--secondary-gold);
+            width: 1.8rem;
+        }
+        /* 基因谱系卡片 */
+        .gene-tabs {
+            display: flex;
+            gap: 0.8rem;
+            margin: 1.5rem 0 1rem;
+            flex-wrap: wrap;
+        }
+        .gene-tab {
+            background: #e7d9cc;
+            border: none;
+            border-radius: 40px;
+            padding: 0.6rem 1.8rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--accent-ink);
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid transparent;
+        }
+        .gene-tab.active {
+            background: var(--primary-burgundy);
+            color: white;
+            border-color: var(--secondary-gold);
+        }
+        .gene-panel {
+            display: none;
+            background: #faf5ef;
+            border-radius: 28px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+            margin-top: 0.5rem;
+        }
+        .gene-panel.active-panel {
+            display: block;
+        }
+        .gene-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1rem;
+        }
+        .gene-item {
+            background: white;
+            border-radius: 20px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.02);
+            border: 1px solid #f0e1d2;
+            transition: background 0.2s;
+        }
+        .stitch-item, .color-item {
+            cursor: pointer;
+        }
+        .stitch-item:hover, .color-item:hover {
+            background: #dac0a8;
+            border-color: var(--secondary-gold);
+        }
+        .gene-item i {
+            font-size: 2rem;
+            color: var(--primary-burgundy);
+            margin-bottom: 0.5rem;
+        }
+        .gene-item span {
+            font-weight: 500;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+        .gene-item small {
+            color: #7b6b5f;
+            font-size: 0.8rem;
+        }
+        .lineage-list {
+            list-style: none;
+            padding: 0;
+        }
+        .lineage-list li {
+            padding: 0.6rem 0;
+            border-bottom: 1px dashed #dccfc1;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        .lineage-list li i {
+            width: 2rem;
+            color: var(--secondary-gold);
+        }
+        .miniature-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        .miniature-item {
+            background: white;
+            border-radius: 30px;
+            padding: 0.3rem 1.2rem;
+            border: 1px solid var(--border-light);
+            font-size: 0.9rem;
+        }
+        @media (max-width: 700px) {
+            .pip-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+            .modal-content { padding: 1.5rem; }
+        }
+        .footer {
+            margin-top: 4rem;
+            background: #2e241f;
+            color: #ccbcaf;
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 6px solid var(--primary-burgundy);
+        }
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--border-light), transparent);
+            margin: 2rem 0;
+        }
+        /* 针法/色彩详情框 & 故事详情框 */
+        .stitch-detail-box, .color-detail-box {
+            background: #f3e5d8;
+            border-radius: 16px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #822433;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .story-toggle-btn {
+            background: var(--primary-burgundy);
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 0.5rem 1.5rem;
+            cursor: pointer;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.2s;
+        }
+        .story-toggle-btn:hover {
+            background: #9f3042;
+        }
+        .xiang-story-detail {
+            background: #f9f1e9;
+            border-radius: 16px;
+            padding: 1rem;
+            max-height: none;
+            overflow: visible;
+            border-left: 4px solid var(--secondary-gold);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-top: 0.5rem;
+        }
+        .xiang-story-detail h5 {
+            color: #822433;
+            margin: 1rem 0 0.5rem;
+            font-size: 1.1rem;
+        }
+        .xiang-story-detail p {
+            margin-bottom: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fas fa-feather"></i> 绣脉<span> · 中国名绣非遗档案</span>
+            </div>
+            <div class="nav-links">
+                <a href="#home">首页</a>
+                <a href="#map-section">数字地图</a>
+                <a href="#culture-cards">名绣档案</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero 部分 -->
+    <section class="hero" id="home">
+        <div class="container hero-grid">
+            <div class="hero-title">
+                <div class="badge">江西省大学生创新训练项目</div>
+                <h1><strong>绣脉</strong> 传统刺绣技艺<br>数字化传承与创新融合</h1>
+                <div class="hero-stats">
+                    <div class="stat-item"><span class="stat-number">20+</span><br>核心绣种</div>
+                    <div class="stat-item"><span class="stat-number">10w+</span><br>纹样元件</div>
+                    <div class="stat-item"><span class="stat-number">5k+</span><br>针法数据</div>
+                </div>
+            </div>
+            <div class="hero-cover">
+                <i class="fas fa-robot"></i>
+                <p>AI 纹样生成 · 虚拟绣架 · 数字基因解码</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 数字地图区块 -->
+    <div class="container" id="map-section">
+        <h2><i class="fas fa-map-china"></i> 数字地图 · 绣脉导航</h2>
+        <p class="section-sub">探索四大名绣基因</p>
+        <div id="china-map"></div>
+        <div class="map-tip"><i class="fas fa-hand-pointer"></i> 点击苏州、长沙、广州、成都查看对应绣种档案</div>
+        <!-- 动态更新区域 -->
+        <div class="active-embroidery" id="activeEmb">
+            <span class="label" id="embName">苏绣</span>
+            <div class="embroidery-detail" id="embDetail">
+                <span class="detail-item"><i class="fas fa-palette" style="color:#822433;"></i> 色彩: 雅致柔和</span>
+                <span class="detail-item"><i class="fas fa-thread" style="color:#822433;"></i> 特色针法: 双面绣、套针</span>
+                <span class="detail-item"><i class="fas fa-dragon" style="color:#822433;"></i> 代表题材: 小猫、金鱼</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 中国名绣 · 文化卡片 -->
+    <div class="container" id="culture-cards">
+        <h2><i class="fas fa-scroll"></i> 指尖传奇 · 中国名绣非遗档案</h2>
+        <p class="section-sub">技艺·传承·名家·现在·未来</p>
+        <div class="card-grid">
+            <!-- 苏绣卡片 -->
+            <div class="emb-card" data-emb="su">
+                <div class="emb-icon"><i class="fas fa-cat"></i></div>
+                <h3>苏绣</h3>
+                <div class="emb-sub">精 · 细 · 雅 · 洁</div>
+                <div class="emb-tags">
+                    <span class="tag">双面绣</span>
+                    <span class="tag">仿真绣</span>
+                    <span class="tag">劈丝极细</span>
+                </div>
+            </div>
+            <!-- 湘绣卡片 -->
+            <div class="emb-card" data-emb="xiang">
+                <div class="emb-icon"><i class="fas fa-paw"></i></div>
+                <h3>湘绣</h3>
+                <div class="emb-sub">写实 · 豪放 · 艳丽</div>
+                <div class="emb-tags">
+                    <span class="tag">鬅毛针</span>
+                    <span class="tag">狮虎</span>
+                    <span class="tag">色彩浓烈</span>
+                </div>
+            </div>
+            <!-- 粤绣卡片 -->
+            <div class="emb-card" data-emb="yue">
+                <div class="emb-icon"><i class="fas fa-dragon"></i></div>
+                <h3>粤绣</h3>
+                <div class="emb-sub">富丽 · 金碧 · 繁复</div>
+                <div class="emb-tags">
+                    <span class="tag">钉金绣</span>
+                    <span class="tag">垫高绣</span>
+                    <span class="tag">百鸟朝凤</span>
+                </div>
+            </div>
+            <!-- 蜀绣卡片 -->
+            <div class="emb-card" data-emb="shu">
+                <div class="emb-icon"><i class="fas fa-fish"></i></div>
+                <h3>蜀绣</h3>
+                <div class="emb-sub">严谨 · 光亮 · 平整</div>
+                <div class="emb-tags">
+                    <span class="tag">车拧针</span>
+                    <span class="tag">芙蓉鲤鱼</span>
+                    <span class="tag">晕染细腻</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI创新工坊 -->
+    <div class="container">
+        <h2><i class="fas fa-microchip"></i> AI创新工坊 · 纹样智能生成 (演示)</h2>
+        <div style="background: #e8ddd2; border-radius: 30px; padding: 2rem; text-align: center;">
+            <p style="font-size:1.4rem; margin-bottom:1rem;">点击按钮，随机生成新纹样描述 (模拟AI扩散模型)</p>
+            <div class="ai-simulate" style="background: #342b26; color: #f1e3d7; display: inline-block; padding: 1.2rem 3rem; border-radius: 60px;">
+                <span id="aiOutput">双鱼吉庆 · 缠枝牡丹纹</span>
+                <button id="generateBtn"><i class="fas fa-wand-magic"></i> 生成</button>
+            </div>
+            <p style="margin-top:1rem;">风格：清雅苏绣｜色彩：赭石+月白</p>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <i class="fas fa-feather" style="margin-right: 1rem;"></i> 绣脉 · 数字基因库 — 传统刺绣数字化传承与创新融合发展计划<br>
+        </div>
+    </footer>
+
+    <!-- 画中画模态框 -->
+    <div class="modal-overlay" id="embModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModalBtn">&times;</span>
+            <div id="modalDynamicContent">
+                <!-- 动态填充内容 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            document.addEventListener('DOMContentLoaded', function() {
+                // ---------- 地图初始化 ----------
+                try {
+                    const mapChart = echarts.init(document.getElementById('china-map'));
+                    const cities = [
+                        { name: '苏州', coord: [120.58, 31.3], style: '苏绣', color: '#822433', desc: '精、细、雅、洁，双面绣，仿真绣' },
+                        { name: '长沙', coord: [112.93, 28.23], style: '湘绣', color: '#b45f3a', desc: '鬅毛针，写实狮虎，色彩浓烈' },
+                        { name: '广州', coord: [113.23, 23.16], style: '粤绣', color: '#d49c3d', desc: '钉金绣，富丽堂皇，龙凤百鸟' },
+                        { name: '成都', coord: [104.06, 30.67], style: '蜀绣', color: '#6a8e6b', desc: '车拧针，芙蓉鲤鱼，平滑光亮' }
+                    ];
+                    const mapOption = {
+                        tooltip: { trigger: 'item', formatter: '{b}' },
+                        series: [
+                            {
+                                name: '中国地图',
+                                type: 'map',
+                                map: 'china',
+                                roam: false,
+                                zoom: 1.2,
+                                itemStyle: { borderColor: '#b59e85', areaColor: '#eeddcc', borderWidth: 1 },
+                                emphasis: { areaColor: '#d4b79e' },
+                                select: { disabled: true },
+                            },
+                            {
+                                name: '绣种标记',
+                                type: 'effectScatter',
+                                coordinateSystem: 'geo',
+                                data: cities.map(c => ({ name: c.name, value: c.coord.concat(1) })),
+                                symbolSize: 18,
+                                rippleEffect: { brushType: 'stroke' },
+                                itemStyle: { color: '#822433', borderColor: '#fae3cd', borderWidth: 2 },
+                                label: { show: true, position: 'top', color: '#3a2c29', fontSize: 12, offset: [0, -10] },
+                            }
+                        ]
+                    };
+                    mapChart.setOption(mapOption);
+
+                    const embName = document.getElementById('embName');
+                    const embDetail = document.getElementById('embDetail');
+                    function updateEmbroidery(cityName) {
+                        let title = '', color = '', needle = '', theme = '';
+                        if (cityName === '苏州') { title = '苏绣'; color = '雅致柔和'; needle = '双面绣、套针、散套针'; theme = '小猫、金鱼、花鸟'; }
+                        else if (cityName === '长沙') { title = '湘绣'; color = '浓烈饱和'; needle = '鬅毛针、乱针绣'; theme = '狮、虎、松鼠'; }
+                        else if (cityName === '广州') { title = '粤绣'; color = '金碧辉煌'; needle = '钉金绣、垫高绣'; theme = '龙凤、百鸟、荔枝'; }
+                        else if (cityName === '成都') { title = '蜀绣'; color = '光亮平整'; needle = '车拧针、晕针'; theme = '芙蓉鲤鱼、熊猫'; }
+                        else return;
+                        embName.innerText = title;
+                        embDetail.innerHTML = `
+                            <span class="detail-item"><i class="fas fa-palette" style="color:#822433;"></i> 色彩: ${color}</span>
+                            <span class="detail-item"><i class="fas fa-thread" style="color:#822433;"></i> 特色针法: ${needle}</span>
+                            <span class="detail-item"><i class="fas fa-dragon" style="color:#822433;"></i> 代表题材: ${theme}</span>
+                        `;
+                    }
+                    mapChart.on('click', { seriesName: '绣种标记' }, (params) => { if (params.name) updateEmbroidery(params.name); });
+                    mapChart.on('click', { seriesName: '中国地图' }, (params) => {
+                        const name = params.name;
+                        if (name && (name.includes('江苏')||name.includes('苏州'))) updateEmbroidery('苏州');
+                        else if (name && (name.includes('湖南')||name.includes('长沙'))) updateEmbroidery('长沙');
+                        else if (name && (name.includes('广东')||name.includes('广州'))) updateEmbroidery('广州');
+                        else if (name && (name.includes('四川')||name.includes('成都'))) updateEmbroidery('成都');
+                    });
+                    window.addEventListener('resize', () => { mapChart.resize(); });
+                } catch (e) {
+                    console.warn('地图初始化失败', e);
+                    document.getElementById('china-map').innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#822433;">地图数据暂不可用，但不影响下方名绣卡片体验</div>';
+                }
+
+                // ---------- 湘绣针法详细数据 ----------
+                const xiangStitchDetails = {
+                    "鬅毛针": {
+                        定位: "湘绣独创核心绝技，是湘绣'狮虎题材'冠绝四大名绣的关键针法，由湘绣艺人改良传统掺针定型而成。",
+                        特点: "针路呈放射状聚散排布，遵循毛发生长规律施针；毛发根部用粗线、疏排针法，毛尖用细线、密排针法，线脚全部隐藏不露，打破传统刺绣'平、齐、光、亮'的刻板标准，采用粗线铺底、细线混色、层层叠加的绣制方式。",
+                        艺术效果: "绣出的毛发根根分明、力贯毫端，兼具蓬松感与立体感，皮毛质感刚劲挺立，自带自然光泽，仿佛毛发从皮肉中生长而出，灵动逼真。",
+                        用途: "专用于狮、虎、豹、猫、犬等走兽皮毛绣制，后期也拓展至金丝猴、马等动物的毛发表现。"
+                    },
+                    "乱掺针": {
+                        定位: "湘绣基础核心针法，属于掺针体系的经典分支，是湘绣晕色过渡的主要技法。",
+                        特点: "针脚长短参差、错落排布，不追求规整排列，色线穿插自然融合，接线处无明显痕迹，通过深浅色线的无序掺合实现色彩渐变。",
+                        艺术效果: "画面柔和温润、晕色自然细腻，无生硬色块边界，质感通透柔和，还原物象真实肌理。",
+                        用途: "花卉花瓣、叶片、人物肌肤、天空云彩、山水晕染、渐变色块等大面积柔质题材。"
+                    },
+                    "游针": {
+                        定位: "湘绣线条类灵动针法，以流畅婉转见长。",
+                        特点: "针路细长连贯、一气呵成，线条婉转起伏、弧度自然，起落针衔接无痕，针脚顺着线条走势延伸，无突兀断点。",
+                        艺术效果: "线条轻盈飘逸、动感十足，能精准表现柔滑、灵动的线条质感，富有韵律美。",
+                        用途: "人物衣纹、飘带、水流波纹、云气、细长叶脉、花瓣轮廓、发丝等细长线条题材。"
+                    },
+                    "隐针": {
+                        定位: "湘绣高级精细针法，以'无痕绣制'为核心特色。",
+                        特点: "起针、落针、接线全部隐藏在绣品纹理内部，针脚细密平整，走线贴合物象肌理，不外露任何针线痕迹，对绣制功底要求极高。",
+                        艺术效果: "绣面光洁平整、浑然天成，视觉上无人工针线痕迹，还原物象原生质感，精致度拉满。",
+                        用途: "人物面部、手部、光滑绸缎面料、精细纹样、瓷器、玉器等细腻光滑题材。"
+                    },
+                    "盖针": {
+                        定位: "湘绣层次叠加针法，用于强化质感与色彩厚度。",
+                        特点: "先绣底层基础针法，再在表层叠加一层或多层短针，覆盖底层针脚，通过多层叠加加深色彩、加厚肌理，针路贴合底层纹理走向。",
+                        艺术效果: "色彩厚重浓郁、层次分明立体，物象质感饱满紧实，立体感与厚重感显著提升。",
+                        用途: "花瓣叠压处、叶片重叠处、衣物褶皱、深色块面、动物皮毛深层纹理。"
+                    },
+                    "花针": {
+                        定位: "湘绣传统装饰性针法，纹样规整、装饰性强。",
+                        特点: "针路规律对称、排列整齐，多呈放射状、循环状或对称式排布，针法严谨规整，纹样造型统一。",
+                        艺术效果: "纹样精致规整、装饰感浓郁，视觉上工整大气，凸显传统纹样美感。",
+                        用途: "花卉花心、花瓣纹理、传统花边、吉祥纹样、图案边框、服饰纹饰。"
+                    },
+                    "打子针": {
+                        定位: "湘绣立体点缀针法，又称打籽针，是经典颗粒状针法。",
+                        特点: "绣线绕针一圈形成线圈，落针固定后形成凸起的颗粒状籽点，籽点大小均匀、排列可控，可密可疏。",
+                        艺术效果: "颗粒饱满圆润、立体感极强，点缀效果醒目突出，质感精巧灵动。",
+                        用途: "花卉花蕊、果实、珠饰、兽类眼睛、点状装饰、纹样高光、纽扣等立体点状题材。"
+                    },
+                    "钩针": {
+                        定位: "湘绣轮廓勾勒针法，用于强化物象形态边界。",
+                        特点: "沿物象边缘走线，针脚紧实挺拔，线条清晰利落，可根据轮廓粗细调整线径与针距，勾勒线条笔直或弧度精准。",
+                        艺术效果: "物象轮廓分明、形态清晰，有效区分不同色块与部位，让整体造型更立体规整。",
+                        用途: "花瓣轮廓、叶片边缘、人物五官轮廓、器物边线、纹样边框、文字线条。"
+                    },
+                    "扎针": {
+                        定位: "湘绣精细点缀针法，属于短针点刺技法。",
+                        特点: "针脚短小精悍、落点精准，多采用垂直或斜向点刺方式，针距疏密可控，多用于局部细节点缀。",
+                        艺术效果: "点缀精细入微、定位精准，能刻画极小的细节，提升绣品精致度。",
+                        用途: "花蕊细点、兽毛尖端、动物斑纹、眼神高光、细小纹理、斑点装饰等微细节部位。"
+                    }
+                };
+
+                // ---------- 湘绣色彩DNA详细数据 ----------
+                const xiangColorDetails = {
+                    "朱砂": {
+                        定位: "纯正鲜亮的正红色，色泽浓郁沉稳、艳而不浮，自带庄重华贵的气场。",
+                        特点: "湘绣里象征喜庆、祥瑞、威严的核心色。多用于绣制喜庆题材纹样、吉祥纹饰、人物服饰、狮虎斑纹、花卉花心；搭配浅色丝线提亮层次，搭配深色丝线凸显厚重感，是湘绣大件摆件、礼品绣品的常用主打色。"
+                    },
+                    "赭石": {
+                        定位: "温润醇厚的红棕色，介于红与褐之间，色泽古朴自然、低调厚重。",
+                        特点: "兼具暖调质感与复古气韵，适配写实题材与传统纹样。主打表现动物皮毛、山水山石、树干枝干、人物肌肤暗部、仿古绣品底色；作为过渡色衔接亮色与深色，弱化色块生硬感。"
+                    },
+                    "石青": {
+                        定位: "深邃沉静的宝蓝色，色泽浓郁透亮、典雅庄重，自带清冷高级的氛围感。",
+                        特点: "与朱砂、赭石形成极致撞色，视觉冲击力极强。常用于绣制天空、水波、器物、服饰纹饰、花鸟羽毛、背景衬底；与暖调浓烈色搭配，打造主次分明、对比强烈的画面效果。"
+                    },
+                    "745种色阶系统": {
+                        定位: "湘绣构建了业内罕见的745种精细化色阶系统，是写实传神、层次丰富的核心支撑。",
+                        特点: "单色系可细分为数十种渐变色调，色阶搭配乱掺针、盖针等晕色针法，模拟国画水墨晕染效果。针对人物肌肤、花鸟羽毛等细腻题材，选用对应色阶丝线精准施绣，还原物象真实色彩层次。这套色阶有固定的配比与编号，是湘绣艺人代代相传的色彩秘籍。"
+                    },
+                    "对比色·补色并置": {
+                        定位: "湘绣将色环上对立的色系（如红与绿、蓝与橙）相邻排布，通过针法疏密、丝线粗细、色阶过渡实现视觉调和。",
+                        特点: "既强化画面视觉冲击力，又避免色彩杂乱刺眼。主次分明，通常以浓烈正色为主，补色为辅。湖湘地域文化赋予湘绣大胆撞色的底气，多用于花鸟、吉祥纹样、喜庆摆件等，画面鲜活灵动。"
+                    },
+                    "矿物色·植物色套染": {
+                        定位: "湘绣坚守传统天然染色工艺，采用矿物颜料与植物染料套染丝线，是色彩历久弥新、质感温润的关键。",
+                        特点: "矿物色（朱砂、石青等）取自天然矿石，色泽浓郁、附着力强；植物色（红花、茜草、板蓝根等）萃取自湖南本地植物，色泽柔和清新。套染技法将矿物色与植物色结合，先以植物色打底，再用矿物色罩染，调出独一无二的中间色与过渡色，兼具矿物色的持久度与植物色的柔和感。"
+                    }
+                };
+
+                // ---------- 湘绣传承故事详细内容 ----------
+                const xiangHeritageStories = `
+                    <h5>一、鬅毛针的诞生：余振辉与虎啸传奇</h5>
+                    <p>20世纪50年代以前，湘绣表现猛兽皮毛始终缺乏独门针法，作品立体感不足、神韵欠缺。湘绣老艺人<strong>余振辉</strong>潜心钻研多年，反复观察真实狮虎的毛发生长规律，摒弃传统刺绣平整规整的思路，在传统掺针基础上大胆创新，摸索出放射状、分层施针的技法。他日夜苦练、不断试错，攻克了线脚隐藏、色彩过渡、毛发蓬松度等诸多难题，最终定型这套独门针法，后经画师李云青命名为“鬅毛针”。余振辉绣制的《猛虎图》，虎毛刚劲挺立、虎目炯炯有神，一举惊艳全国刺绣界，让湘绣虎成为传世经典，也让鬅毛针这一绝技得以传承至今，成为湘绣人的精神符号。</p>
+                    <h5>二、国礼绣娘：双面全异绣的匠心坚守</h5>
+                    <p>上世纪70年代，湘绣接到国家级重任，需要创作顶级刺绣国礼。以<strong>周金秀、刘爱云</strong>为代表的湘绣大师，顶着巨大压力攻关双面全异绣技艺。这项技艺无先例可循，绣师需要同时掌控正反两面的针法、色彩、图案，稍有失误便前功尽弃。大师们日夜伏案，一针一线反复打磨，耗时数月甚至数年，成功绣制出多件双面全异绣精品。其中双面全异绣《狮虎》被作为国礼赠予外国元首，让湘绣惊艳世界舞台。晚年的刘爱云大师依旧坚守绣台，手把手带徒传艺，把毕生技艺毫无保留传承下去，用一生守护湘绣的荣光。</p>
+                    <h5>三、百年绣庄：文脉绵延的民间传承</h5>
+                    <p>晚清民国时期，长沙吴彩霞绣庄、锦云绣庄等老字号，是湘绣传承的重要载体。当年的绣庄既收徒传艺，又承接高端绣品订单，将民间刺绣与文人书画结合，培养了大批技艺精湛的绣师。彼时的绣娘多为民间女子，从小苦练劈丝、刺绣技艺，一针一线皆是岁月沉淀。即便在战乱年代，湘绣艺人也坚守绣台，保护针法图谱、传承核心技艺，让湘绣文脉未曾中断。如今，这些百年绣庄的技艺脉络，依旧在新一代湘绣传承人手中延续，传统针法与现代设计融合，让老手艺焕发新生。</p>
+                    <h5>四、新生代传承：让非遗走进当代</h5>
+                    <p>随着非遗保护热潮，新一代湘绣传承人扛起重任。年轻绣师们不仅苦练传统针法、吃透鬅毛针、双面全异绣等绝技，还打破传统桎梏，将湘绣与现代服饰、文创产品、家居软装结合，让高冷的非遗技艺贴近大众生活。他们走进校园开设课程、借助直播平台科普湘绣文化、创新绣品题材与样式，让更多年轻人了解湘绣、爱上湘绣、传承湘绣。从白发苍苍的老艺人到朝气蓬勃的青年绣娘，湘绣的匠心代代相传，在坚守中创新，在传承中发展，让这门古老技艺历久弥新。</p>
+                `;
+
+                // ---------- 苏绣针法详细数据 ----------
+                const suStitchDetails = {
+                    "齐针": {
+                        定位: "苏绣最基础的入门针法，也是所有复杂针法的铺垫，是苏绣'平、齐'特质的基础保障。",
+                        特点: "针脚长短一致、排列整齐均匀，走线方向统一，起落针均在纹样轮廓边缘，无重叠、无露底、无歪斜，走线顺滑平直。",
+                        艺术效果: "绣面平整光洁、纹样规整，质感简洁素雅，适合大面积纯色铺陈。",
+                        用途: "简单纹样打底、色块平涂、文字刺绣、小型几何图案、服饰边角装饰。"
+                    },
+                    "套针": {
+                        定位: "苏绣核心针法，分为平套、散套、集套等分支，是实现色彩渐变、层次过渡的关键技法。",
+                        特点: "分层分批刺绣，后一层针脚嵌入前一层针脚间隙，层层相套、循序渐进，深浅色线顺势衔接，针脚长短随纹样弧度微调，贴合物象肌理走向。",
+                        艺术效果: "色彩过渡自然柔和，无生硬色块边界，立体感强，还原物象真实质感。",
+                        用途: "花卉花瓣、叶片、鸟兽羽毛、人物服饰、山水晕染等写实题材。"
+                    },
+                    "施针": {
+                        定位: "苏绣特色写实针法，别称'施毛针'，专为表现毛发、绒毛类题材设计。",
+                        特点: "针路稀疏有致、由密渐疏，顺着毛发生长方向斜向施针，针脚长短交错，边缘针脚自然散开，贴合毛发蓬松柔软的生长状态。",
+                        艺术效果: "毛发细腻柔顺、层次分明，蓬松感与真实度拉满，灵动自然。",
+                        用途: "猫、狗、兔、松鼠等小动物绒毛，鸟类软羽、人物发丝等细腻毛质题材。"
+                    },
+                    "乱针绣": {
+                        定位: "苏绣创新巅峰针法，由近代苏绣大师杨守玉首创，打破传统刺绣规整定式，被誉为'刺绣界的油画'。",
+                        特点: "打破固定针路，采用长短、方向、疏密不一的交叉针脚，混合各色丝线无序穿插，模仿油画笔触与光影效果，针法奔放却章法严谨。",
+                        艺术效果: "画面立体感强、光影层次丰富，兼具针线质感与油画艺术氛围，写意与写实兼具。",
+                        用途: "人物肖像、风景油画、静物写生、抽象艺术题材等创新绣品。"
+                    },
+                    "滚针": {
+                        定位: "苏绣线条类专用针法，主打细长线条勾勒，是表现流畅曲线的核心技法。",
+                        特点: "针脚紧密衔接、前后相扣，走线呈螺旋状滚动延伸，线条纤细连贯，无断点、无松散，弧度精准可控。",
+                        艺术效果: "线条圆润流畅、挺拔细腻，适合表现柔中带刚的细长纹理。",
+                        用途: "叶脉、花茎、发丝、衣纹褶皱、动物胡须、纹样轮廓等纤细线条。"
+                    },
+                    "接针": {
+                        定位: "苏绣衔接类基础针法，多用于延长线条、拼接纹样，保证绣面完整性。",
+                        特点: "前一针落针处为后一针起针点，针针相连、首尾衔接，接线处隐藏无痕，针脚细密紧实。",
+                        艺术效果: "线条连贯不断、平整顺滑，无接线痕迹，保障长线条的流畅度。",
+                        用途: "超长线条刺绣、纹样拼接、轮廓延伸、细小纹理衔接。"
+                    },
+                    "双面绣": {
+                        定位: "苏绣顶级技艺，在透明底料上正反两面同步刺绣，是苏绣精细度的标志性技艺。",
+                        特点: "同底同线、正反同步，起针、落针、接线全部隐藏，两面针法、图案、色彩完全一致，无任何线头外露，对绣师专注力和功底要求极高。",
+                        艺术效果: "正反两面均为完整精品，精致通透，观赏性极强。",
+                        用途: "屏风、摆件、团扇、手帕、礼品绣品等双面观赏类作品。"
+                    },
+                    "发绣": {
+                        定位: "苏绣特色小众绝技，以人体发丝替代丝线，属于非遗珍稀技艺。",
+                        特点: "选用乌黑柔顺的天然发丝，经过脱脂、软化处理后，采用齐针、套针等基础针法刺绣，发丝粗细均匀、质感坚韧，不易褪色变质。",
+                        艺术效果: "色调素雅古朴、质感独特，兼具纪念意义与艺术价值，经久耐用。",
+                        用途: "人物肖像、佛像、书法、纪念性绣品等高端小众题材。"
+                    },
+                    "精微绣": {
+                        定位: "苏绣极致精细技艺，代表苏绣工艺巅峰，堪称'针尖上的微雕'。",
+                        特点: "将丝线劈至数丝甚至数十丝，选用超细钢针，在极小尺幅上刺绣，针脚细密到肉眼难辨，构图精巧、细节满满。",
+                        艺术效果: "尺幅小巧却细节丰富，精致绝伦、巧夺天工，极具收藏价值。",
+                        用途: "微型摆件、挂件、鼻烟壶绣、小型精品收藏绣品。"
+                    }
+                };
+
+                // ---------- 苏绣色彩DNA详细数据 ----------
+                const suColorDetails = {
+                    "三蓝绣": {
+                        色彩特质: "苏绣经典传统色系，以三种层次渐变的蓝色为主调，从深邃到浅淡，分别为深蓝、品蓝、月白，色调清冷雅致、温润通透，尽显江南水乡的空灵意境。",
+                        配色逻辑: "以深蓝打底、品蓝过渡、月白提亮，层层渐变、深浅呼应，无需其他色彩点缀，单色系即可营造静谧雅致的氛围。",
+                        应用场景: "传统服饰、手帕、荷包、花鸟题材、文人摆件、仿古绣品，是苏绣最具辨识度的单色体系。"
+                    },
+                    "五彩绣": {
+                        色彩特质: "苏绣传统经典色系，遵循五行五色传统美学，选用赤、黄、青、黑、白五种正色，配色规整、寓意吉祥，饱和度适中，摒弃浓烈张扬，兼顾喜庆与雅致。",
+                        配色逻辑: "五色搭配主次分明，以一色为主、其余为辅，比例协调、互不抢色，贴合传统吉祥文化寓意，凸显端庄大气的质感。",
+                        应用场景: "吉祥纹样、婚庆绣品、民俗摆件、传统服饰、宫廷风绣品。"
+                    },
+                    "水墨绣": {
+                        色彩特质: "苏绣文人风代表色系，以黑、白、灰三色为主，模仿国画水墨丹青的晕染效果，墨色从浓墨、淡墨到浅灰逐级渐变，色调素雅空灵、意境悠远。",
+                        配色逻辑: "以白色丝线为底，墨色丝线分层晕染，通过针法疏密控制墨色深浅，无多余杂色，尽显文人书画的淡泊气韵。",
+                        应用场景: "山水、花鸟、书法、人物写意、文人屏风、高端艺术摆件。"
+                    },
+                    "间色系统": {
+                        色彩特质: "苏绣日常实用与雅致兼顾的间色体系，牙色温润、驼色古朴、藕荷柔和，均为低饱和度中性色，色调柔和耐看、百搭不挑题材，贴合江南温婉内敛的审美。",
+                        配色逻辑: "间色之间相互搭配，或与正色浅淡搭配，过渡自然、和谐统一，无视觉违和感，凸显细腻温柔的质感。",
+                        应用场景: "日用服饰、家居绣品、荷包、扇面、日常装饰绣品，实用性与艺术性兼具。"
+                    }
+                };
+
+                // ---------- 苏绣传承故事详细内容 ----------
+                const suHeritageStories = `
+                    <h5>一、乱针绣的革新：杨守玉与刺绣革命</h5>
+                    <p>20世纪20年代，苏绣依旧以传统规整针法为主，题材局限、表现力不足。苏绣大师<strong>杨守玉</strong>潜心钻研，突破千年刺绣定式，结合西洋油画光影原理，首创乱针绣技法。她摒弃整齐针脚，用交叉错落的针法模拟笔触，让刺绣从平面走向立体，从写实走向写意，彻底改写苏绣发展历史。乱针绣问世后惊艳业界，让苏绣突破传统桎梏，适配更多现代艺术题材，杨守玉也被誉为"现代苏绣之父"，这份创新精神至今影响着苏绣传承。</p>
+                    <h5>二、精微绣匠心：赵红育与针尖微雕</h5>
+                    <p>国家级非遗传承人<strong>赵红育</strong>，是苏绣精微绣的代表性大师，毕生深耕极致精细的精微绣技艺。她常年在放大镜下刺绣，将丝线劈至最细，在方寸之间绣出繁复场景，代表作《百鸟朝凤》《丝绸之路》尺幅极小却细节拉满，每一根羽毛、每一处纹路都清晰逼真。为了传承精微绣，她克服视力与手部劳损的困扰，手把手带徒传艺，制定严苛的技艺标准，让这门濒临失传的针尖绝技得以延续，用一生诠释"慢工出细活"的苏绣匠心。</p>
+                    <h5>三、双面绣国礼：李娥英的大国匠心</h5>
+                    <p>苏绣大师<strong>李娥英</strong>是双面绣技艺的集大成者，一生专注双面绣、双面异色绣研发与创作。上世纪七八十年代，她受命创作国礼绣品，耗时数月潜心打磨，绣制的《白猫》《金鱼》等双面绣作品，通透精致、灵动传神，被作为国礼赠予多国元首，让苏绣惊艳世界舞台。晚年的李娥英坚守绣台，整理针法图谱、免费收徒授课，打破传统技艺"传内不传外"的规矩，让双面绣技艺惠及更多传承人，用匠心守护苏绣的荣光。</p>
+                    <h5>四、百年传承：沈寿与苏绣改良</h5>
+                    <p>清末民初，苏绣大师<strong>沈寿</strong>（沈云芝）为苏绣传承与革新做出卓越贡献。她远赴日本考察美术刺绣，结合西方光影技法，首创"仿真绣"，让苏绣更具立体感与真实感，其作品《意大利皇后像》《世界救世主耶稣像》多次斩获国际大奖，让苏绣走向世界。沈寿还创办刺绣学校，编写《雪宧绣谱》，系统梳理苏绣针法与技艺，打破传统口口相传的模式，让苏绣技艺有了文字典籍传承，为后世苏绣发展奠定了坚实基础，成为苏绣传承史上的里程碑式人物。</p>
+                `;
+
+                // ---------- 蜀绣针法详细数据 ----------
+                const shuStitchDetails = {
+                    "车拧针": {
+                        定位: "蜀绣特色塑形针法，专为表现弧形、圆形及旋转类纹样设计，是蜀绣塑造灵动形态的关键技法。",
+                        特点: "针路顺着物象弧度旋转走线，针脚紧密环绕，通过旋针、拧针的交错配合，贴合圆形、弧形纹理走向，走线流畅无死角，针脚排布均匀贴合，无松散歪斜之感。",
+                        艺术效果: "纹样弧度圆润自然、立体感强，适合表现动态曲线与圆形造型，形态饱满灵动。",
+                        用途: "鱼鳞、鸟羽、花瓣、兽眼、圆形纹样、瓜果轮廓等弧形、旋转类题材。"
+                    },
+                    "晕针（长短参差）": {
+                        定位: "蜀绣核心晕色针法，是实现色彩渐变、肌理柔和的基础绝技，区别于其他名绣晕针，以长短参差为核心特色。",
+                        特点: "针脚长短不一、错落排布，深浅色线顺势穿插，不追求整齐划一，通过长短针的衔接过渡，让色彩自然晕散，针脚隐于纹理之间，不露生硬边界。",
+                        艺术效果: "色彩过渡柔和通透，肌理细腻逼真，画面层次丰富，兼具写实感与温润质感。",
+                        用途: "花卉花瓣、叶片、人物肌肤、山水云雾、动物皮毛等渐变晕染题材。"
+                    },
+                    "锦纹针（编织锦/拉花锦/闩花锦）": {
+                        定位: "蜀绣标志性独门针法，融合蜀锦织造纹理，是蜀绣区别于其他名绣的代表性技艺，下辖编织锦、拉花锦、闩花锦三大分支。",
+                        特点: "模仿蜀锦的编织纹理，针路规律规整、经纬交错，不同分支针法各有侧重：编织锦针路密实如织锦，拉花锦线条灵动呈花式纹理，闩花锦纹路规整且层次分明，整体针法严谨、纹样繁复。",
+                        艺术效果: "纹样精致华丽、质感厚重，兼具刺绣与织锦双重美感，装饰性极强。",
+                        用途: "服饰镶边、锦缎纹样、背景衬底、吉祥纹饰、高档摆件、仿古绣品。"
+                    },
+                    "衣锦纹针": {
+                        定位: "蜀绣专用装饰针法，主打衣物、织物纹理绣制，贴合传统服饰的织造质感。",
+                        特点: "针路呈规律的几何状排布，模仿绸缎、锦布的织造纹路，针脚平齐细密，纹理整齐对称，层次清晰有序。",
+                        艺术效果: "绣制的衣物纹理逼真、质感华贵，还原绸缎光泽与肌理，尽显雅致大气。",
+                        用途: "人物服饰、古装绣品、锦缎面料、器物包裹布、传统纹样绣制。"
+                    },
+                    "铺针": {
+                        定位: "蜀绣基础打底针法，用于大面积色块铺陈，是复杂绣品的底层铺垫技法。",
+                        特点: "针脚长而平直，走线方向统一，全面覆盖绣底，无露底、无重叠，针脚平齐紧实，为后续精细针法筑牢基底。",
+                        艺术效果: "绣面平整厚实、色块均匀，保障整体画面的平整度与紧实度。",
+                        用途: "大面积底色铺陈、背景填充、花瓣底层、衣物基底等大块面题材。"
+                    },
+                    "纱针": {
+                        定位: "蜀绣轻薄质感专用针法，适合表现通透、纤细的纹理题材。",
+                        特点: "针脚细小稀疏、排列均匀如纱网，走线轻盈，丝线薄而透亮，不厚重堆砌，保留绣面通透感。",
+                        艺术效果: "绣面轻薄通透、质感柔和，还原纤细、朦胧的物象肌理。",
+                        用途: "蝉翼、轻纱、云雾、花瓣薄边、水草、细小花纹等通透纤细题材。"
+                    },
+                    "点彩针": {
+                        定位: "蜀绣点缀点睛针法，用于局部提亮、细节增色，提升画面灵动性。",
+                        特点: "针脚短小精悍、落点精准，采用亮色或对比色丝线，单点或多点穿插点缀，针距疏密可控，不破坏整体画面结构。",
+                        艺术效果: "细节醒目出彩，画面层次更丰富，起到画龙点睛的效果，灵动鲜活。",
+                        用途: "花蕊、眼神高光、斑纹点缀、花瓣尖、果实蒂部等细微局部。"
+                    }
+                };
+
+                // ---------- 蜀绣色彩DNA详细数据 ----------
+                const shuColorDetails = {
+                    "明快色系": {
+                        色彩特质: "蜀绣标志性色系，选取高饱和度的朱红、翠绿、宝蓝三大正色，色调鲜亮明快、对比鲜明，尽显巴蜀文化的热情奔放，是蜀绣民间题材的核心用色。",
+                        配色逻辑: "三色可单独做主色，也可两两搭配撞色，主次分明、比例协调，搭配浅色丝线中和饱和度，做到艳而不俗、亮而不刺眼。",
+                        应用场景: "民俗吉祥纹样、婚庆绣品、花鸟虫鱼、日常服饰、民间摆件等喜庆题材。"
+                    },
+                    "晕染色阶": {
+                        色彩特质: "蜀绣写实晕染核心体系，以单一色系为基础，按照深浅、明暗逐级推移，从深到浅、从浓到淡，色阶过渡自然无缝，无生硬色块断层。",
+                        配色逻辑: "遵循同色系渐变原则，依托晕针长短参差的技法，控制丝线疏密与色阶层数，还原物象自然色彩渐变，凸显细腻温润的质感。",
+                        应用场景: "花卉晕染、肌肤表现、羽毛肌理、山水云雾、叶片渐变等细腻写实题材。"
+                    },
+                    "锦纹套色": {
+                        色彩特质: "蜀绣锦纹类专属配色技法，借鉴蜀锦多色套染工艺，多种色彩相邻并置，纹理与色彩交织，华丽厚重、层次丰富。",
+                        配色逻辑: "多色搭配遵循和谐原则，选用冷暖色互补、深浅色搭配，依托锦纹针的规整针路，让多色并置不乱，色彩与纹样相得益彰，尽显华贵质感。",
+                        应用场景: "锦纹纹样、服饰镶边、高档摆件、仿古锦缎绣品、吉祥纹饰。"
+                    },
+                    "熟色系统": {
+                        色彩特质: "蜀绣雅致复古色系，古铜色温润厚重、皂色沉稳内敛，均为低饱和度的熟性色调，褪去鲜亮感，尽显古朴端庄、低调华贵的气韵。",
+                        配色逻辑: "熟色多作为底色、主色使用，搭配浅淡亮色做点缀，整体色调沉稳大气，贴合复古、高端题材的审美需求，耐看且有底蕴。",
+                        应用场景: "仿古绣品、高端屏风、文人摆件、深色服饰、庄重题材绣品。"
+                    }
+                };
+
+                // ---------- 蜀绣传承故事详细内容 ----------
+                const shuHeritageStories = `
+                    <h5>一、百年作坊的匠心坚守：郝氏蜀绣的文脉延续</h5>
+                    <p>清末民初，成都郝家是蜀绣传承的标志性家族，郝氏家族作坊深耕蜀绣技艺百年，主打宫廷风与民间实用绣品，是当时蜀绣行业的标杆。郝家匠人潜心打磨锦纹针、衣锦纹针等独门技法，严格把控染色、劈丝、刺绣每一道工序，绣品既精致华贵又贴合市井生活。</p>
+                    <p>战乱年间，郝家后人不顾艰难，保护针法图谱、留存染料配方，坚持收徒传艺，让蜀绣技艺未曾断代。如今，郝氏蜀绣的技艺脉络依旧在传承，后辈匠人坚守传统针法，改良色彩配比，让百年作坊的匠心，在现代依旧绽放光彩，成为蜀绣民间传承的典范。</p>
+                    <h5>二、蜀绣大师的革新之路：彭永兴与针法精进</h5>
+                    <p>国家级蜀绣非遗传承人<strong>彭永兴</strong>，是蜀绣现代传承的关键人物，毕生深耕蜀绣针法与色彩研究。早年的蜀绣针法相对单一，题材局限，彭永兴深入民间搜集失传针法，耗时数十年整理完善车拧针、锦纹针等绝技，细化晕针的色阶过渡，让蜀绣针法更系统、表现力更强。</p>
+                    <p>他打破传统题材桎梏，将巴蜀山水、熊猫、川剧脸谱等地域元素融入绣品，创新色彩搭配方式，让蜀绣既有传统韵味，又贴合现代审美。彭永兴还坚持免费授徒，手把手传授劈丝、晕针、锦纹针等核心技艺，培养了大批蜀绣人才，让蜀绣从地方技艺走向全国舞台，用一生践行匠人初心。</p>
+                    <h5>三、针尖上的巴蜀情：康宁与熊猫绣的传承</h5>
+                    <p>蜀绣大师<strong>康宁</strong>，是蜀绣熊猫题材的代表性传承人，以细腻传神的熊猫绣品闻名。熊猫毛发蓬松、神态憨态可掬，对针法与色彩要求极高，康宁潜心钻研晕针、点彩针、车拧针等技法，用长短参差的晕针刻画熊猫绒毛，以点彩针点睛，让绣制的熊猫栩栩如生、神态灵动。</p>
+                    <p>为了让蜀绣被更多人熟知，康宁将蜀绣与文创、文旅结合，创作便携小巧的熊猫绣品、配饰，走进校园开设蜀绣课堂，向青少年普及蜀绣文化。她坚守传统不保守，创新不离本源，让蜀绣这门古老技艺，借助熊猫IP焕发新生，成为传播巴蜀文化的靓丽名片。</p>
+                    <h5>四、非遗守护的代代接力：民间绣娘的匠心传承</h5>
+                    <p>蜀绣的根基，藏在巴蜀大地的民间绣娘手中。千百年来，四川的民间女子自幼学习刺绣，劈丝、染色、施针走线，把蜀绣技艺融入日常生活。过去，民间绣娘以绣品补贴家用，一针一线皆是岁月沉淀，她们口口相传、手把手教学，保留了最质朴的蜀绣针法与色彩配方。</p>
+                    <p>如今，越来越多的年轻绣娘接过接力棒，她们既苦练传统锦纹针、晕针等绝技，又借助互联网传播蜀绣文化，开设线上店铺、直播展示刺绣过程，让高冷的非遗走进大众生活。从白发苍苍的老绣娘到朝气蓬勃的年轻匠人，蜀绣的匠心代代相传，在坚守中创新，让这门巴蜀绝技历久弥新。</p>
+                `;
+
+                // ---------- 粤绣针法详细数据 (依据新文档) ----------
+                const yueStitchDetails = {
+                    "钉金绣": {
+                        定位: "粤绣标志性核心针法，为潮绣代表性绝技，以金线绣制为核心特色，是粤绣富丽风格的关键支撑。",
+                        特点: "以金线、银线为主要线材，采用钉、垫、拼、缀等手法，将金线固定在绣面上，针脚紧实隐蔽，金线排布规整有序，可打造平面鎏金与立体鎏金双重效果，光泽感极强。",
+                        艺术效果: "绣面金碧辉煌、华贵大气，金线反光质感出众，尽显庄重气派，耐磨损且经久不褪色。",
+                        用途: "龙凤纹样、祭祀礼器、宫廷服饰、神像袍服、吉祥牌匾、高端摆件等华贵题材。"
+                    },
+                    "垫高绣": {
+                        定位: "粤绣独家立体针法，又称'凸绣'，是粤绣区别于其他名绣的标志性立体技法。",
+                        特点: "先在绣底垫入棉花、麻布、纸絮等衬料，塑造凸起造型，再在表层施针绣制，衬料厚薄可控，凸起高度灵活调整，针脚贴合垫高轮廓，不露衬料痕迹。",
+                        艺术效果: "物象立体饱满、浮雕感极强，层次分明，视觉冲击力拉满，摆脱平面刺绣的局限。",
+                        用途: "龙凤麟片、花鸟花瓣、神像五官、瑞兽肌理、立体纹样等塑形题材。"
+                    },
+                    "二针企鳞法": {
+                        定位: "粤绣专属鳞甲刻画针法，专为龙、凤、鱼、麒麟等瑞兽鳞羽设计，针法精密且辨识度极高。",
+                        特点: "采用两针一组的针法结构，一针固定鳞甲根部，一针撑起鳞甲尖端，让鳞甲呈挺立翘起状态，鳞片排列整齐、错落有致，针脚隐蔽不外露。",
+                        艺术效果: "鳞甲挺拔立体、层次清晰，动感十足，还原瑞兽鳞羽的坚硬质感与灵动姿态。",
+                        用途: "龙鳞、凤羽、鱼鳞、麒麟甲片等鳞羽类题材。"
+                    },
+                    "虚卜龙凤绣": {
+                        定位: "粤绣龙凤题材专用针法，属于虚实结合的高阶技法，兼顾龙凤造型的大气与细节的灵动。",
+                        特点: "虚实针法搭配使用，主体部位用实针密实绣制，轮廓、绒毛、飘带等部位用虚针稀疏走线，针路贴合龙凤形态走势，疏密对比鲜明，造型舒展大气。",
+                        艺术效果: "龙凤造型飘逸灵动、主次分明，气势恢宏且不失细腻，神韵十足。",
+                        用途: "龙凤呈祥、龙凤戏珠等传统龙凤题材绣品。"
+                    },
+                    "织锦": {
+                        定位: "粤绣仿织锦针法，借鉴岭南织锦纹理，主打规整纹样与厚重质感绣制。",
+                        特点: "针路经纬交错、排列规整，模仿织锦的编织纹理，针脚密实平齐，纹样循环对称，可搭配多色丝线打造繁复锦纹。",
+                        艺术效果: "绣面厚重紧实、纹样规整，兼具刺绣与织锦双重美感，装饰性浓郁。",
+                        用途: "锦缎背景、服饰镶边、吉祥锦纹、器物包裹面等题材。"
+                    },
+                    "编绣": {
+                        定位: "粤绣特色编织类针法，以丝线编织造型为主，工艺精巧且富有肌理感。",
+                        特点: "将丝线交叉、缠绕、编织成网状、绳状纹理，针路灵活多变，编织纹路疏密可控，可单层编织也可多层叠加。",
+                        艺术效果: "纹理独特、质感精巧，镂空感与编织感兼具，画面富有层次变化。",
+                        用途: "镂空纹样、花边、绳结、水草、花瓣纹理等精巧题材。"
+                    },
+                    "绕绣": {
+                        定位: "粤绣立体点缀针法，以丝线绕针塑形，打造颗粒状、环状立体细节。",
+                        特点: "丝线围绕绣针反复缠绕，形成环状、粒状造型，落针固定后成型，绕线松紧、圈数可控，可大可小、可疏可密。",
+                        艺术效果: "细节立体饱满、醒目突出，点缀效果极佳，提升绣品精致度。",
+                        用途: "花蕊、珠饰、瑞兽眼睛、点状花纹、环状装饰等细节题材。"
+                    },
+                    "贴花绣": {
+                        定位: "粤绣复合式针法，属于贴绣与刺绣结合的工艺，提升绣品层次感与效率。",
+                        特点: "先将剪好的绸缎、锦布纹样贴附在绣底，再用锁针、钉针固定边缘，表层可搭配其他针法点缀，贴层紧实不脱落。",
+                        艺术效果: "层次丰富、立体感强，纹样轮廓清晰，兼顾美观与实用性。",
+                        用途: "大型纹样、服饰贴花、民俗挂件、日用绣品等题材。"
+                    }
+                };
+
+                // ---------- 粤绣色彩DNA详细数据 (依据新文档) ----------
+                const yueColorDetails = {
+                    "威彩": {
+                        色彩特质: "粤绣标志性色彩体系，主打高饱和度正色，搭配金线银线，色调浓烈鲜亮、气场全开，尽显金碧辉煌的华贵感，是粤绣祭祀、礼器题材的核心用色。",
+                        配色逻辑: "选用朱红、明黄、翠绿、宝蓝等高纯度色彩，以金银线勾边、铺底，色彩对比强烈，主次分明，契合岭南民俗的喜庆张扬审美。",
+                        应用场景: "龙凤神像、祭祀袍服、婚庆礼绣、宫廷摆件、吉祥牌匾等庄重华贵题材。"
+                    },
+                    "淡彩": {
+                        色彩特质: "粤绣文人雅致色系，采用低饱和度浅淡色调，摒弃浓烈撞色，色调柔和温润、含蓄清雅，是粤绣贴近自然、文人题材的核心用色。",
+                        配色逻辑: "选用浅粉、浅绿、月白、米黄等柔色，色彩过渡自然，少用或不用金银线，凸显清新淡雅的质感。",
+                        应用场景: "花鸟小品、文人扇面、日用服饰、小件佩饰、清新风摆件等题材。"
+                    },
+                    "金银线混搭": {
+                        色彩特质: "粤绣独家色彩技法，金线、银线与彩色丝线混搭使用，利用金属线的光泽感提亮画面，打造鎏金溢彩的视觉效果。",
+                        配色逻辑: "金线暖调华贵、银线冷调雅致，可大面积铺底，也可小面积勾边、点缀，与彩色丝线互补，弱化纯色的单调感，强化华贵氛围。",
+                        应用场景: "钉金绣作品、龙凤纹样、神像装饰、高端礼绣、立体摆件等题材。"
+                    },
+                    "孔雀羽色系": {
+                        色彩特质: "粤绣特色珍稀色系，借鉴孔雀羽的天然色泽，以蓝绿渐变为主，色调瑰丽灵动、自带珠光质感，是粤绣高端精品的专属用色。",
+                        配色逻辑: "以墨蓝、宝蓝、翠绿、石绿为主色调，模拟孔雀羽的天然渐变纹理，搭配金银线勾勒边缘，还原孔雀羽的华贵光泽与灵动层次。",
+                        应用场景: "孔雀题材绣品、高端收藏绣、礼宾国礼、龙凤羽翅点缀等珍稀题材。"
+                    }
+                };
+
+                // ---------- 粤绣传承故事详细内容 (依据新文档) ----------
+                const yueHeritageStories = `
+                    <h5>一、钉金绣的百年坚守：潮绣世家的匠心传承</h5>
+                    <p>粤绣（潮绣）钉金绣技艺，离不开岭南世家的代代守护。晚清民国时期，潮州多家绣庄深耕钉金绣，其中以陈氏家族最为知名，家族匠人世代专攻垫高绣与钉金绣技法，专为祠堂、庙宇、官府制作祭祀绣品与礼器。</p>
+                    <p>匠人师傅们严守技艺口诀，金线选材、衬料铺垫、针脚钉缀每一道工序都精益求精，哪怕是极小的鳞甲纹样，也要耗时数日精工细作。战乱动荡年间，家族传人冒着风险保存针法图谱、金线原料，坚持私下传艺，让钉金绣这门绝技未曾失传。如今，家族后辈依旧坚守绣台，改良传统技法，让钉金绣从祭祀用品走向大众视野，成为粤绣最亮眼的文化名片。</p>
+                    <h5>二、广绣外销传奇：丝路之上的岭南匠心</h5>
+                    <p>明清时期，粤绣（广绣）凭借海上丝绸之路远销海外，成为风靡欧洲的东方奢侈品。彼时广州十三行的绣坊云集，大批绣娘专攻外销粤绣，结合西方审美改良针法与色彩，既保留钉金绣、贴花绣等核心技艺，又适配海外纹样需求，绣品深受欧洲皇室与贵族追捧。</p>
+                    <p>为了保证品质，绣坊匠人严守工艺标准，金银线用料考究、针脚细密无缺，哪怕是小件绣品也精工细作。这些外销粤绣不仅带动了岭南刺绣产业发展，更让中国刺绣文化走向世界。虽历经岁月沉浮，这批外销绣的技艺精髓被完整保留，成为粤绣传承史上浓墨重彩的一笔，见证着岭南匠人的商贸智慧与匠心坚守。</p>
+                    <h5>三、非遗大师的革新：康惠芳与粤绣新生</h5>
+                    <p>国家级粤绣非遗传承人<strong>康惠芳</strong>，是粤绣现代化传承的领军人物，毕生深耕粤绣针法与色彩创新。早年粤绣题材局限、受众狭窄，康惠芳潜心钻研传统垫高绣、钉金绣、二针企鳞法绝技，耗时数年整理失传针法，细化色彩配比，让粤绣工艺更趋完善。</p>
+                    <p>她打破传统题材桎梏，将岭南风光、现代元素融入绣品，创新金银线与淡彩的搭配方式，让粤绣既保留金碧辉煌的特色，又贴合现代审美。为了传承技艺，她创办工作室、走进校园授课，免费收徒传艺，打破"传男不传女、传内不传外"的旧规，培养了大批青年传承人，让粤绣这门古老非遗在新时代焕发新生，多次携作品亮相国际舞台，让世界看见岭南刺绣之美。</p>
+                    <h5>四、民间绣娘的坚守：市井里的非遗文脉</h5>
+                    <p>粤绣的根基，藏在岭南的市井街巷与乡间村落。千百年来，广东民间女子自幼学习绣艺，编绣、绕绣、贴花绣等基础针法口口相传，一针一线绣制嫁衣、荷包、扇袋等日用绣品，把粤绣技艺融入日常生活。</p>
+                    <p>过去，民间绣娘靠着精湛绣艺补贴家用，哪怕岁月变迁，依旧坚守绣台，守护着最质朴的粤绣技艺。如今，越来越多民间绣娘抱团传承，组建非遗工坊，将传统粤绣与现代文创、服饰、家居结合，通过线上平台传播粤绣文化，让高冷的非遗走进寻常百姓家。从白发苍苍的老绣娘到年轻的新生代匠人，她们用针尖坚守，让粤绣文脉在市井烟火中代代延续，绽放出持久的生命力。</p>
+                `;
+
+                // ---------- AI生成随机纹样 ----------
+                const aiSpan = document.getElementById('aiOutput');
+                document.getElementById('generateBtn').addEventListener('click', function() {
+                    const samples = ['缠枝牡丹 · 凤穿花', '海水江崖 · 五福捧寿', '青鸾衔枝 · 如意云纹', '双鱼吉庆 · 缠枝莲', '百花不落地 · 绣球', '狮子滚绣球 · 金玉满堂'];
+                    aiSpan.innerText = samples[Math.floor(Math.random() * samples.length)] + ' (AI生成)';
+                });
+
+                // ---------- 四大名绣数据 ----------
+                const pipData = {
+                    su: {
+                        name: '苏绣',
+                        技艺: '苏绣发源于江苏苏州，是国家级非物质文化遗产、中国四大名绣之首，素有“精细雅洁”的艺术美誉，距今已有两千余年传承历史。苏绣兼具江南水乡的温婉气韵与文人书画的雅致风骨，以针法精细、色彩清雅、意境空灵著称，做到“平、齐、细、密、匀、顺、和、光”八大标准，无论是日用绣品还是艺术摆件，都尽显精巧灵动的匠造之美。',
+                        传承: '清末沈寿创立“仿真绣”，融合西洋画理，代表作《耶稣像》震动世界。近代有金静芬、李娥英等大家；当今姚建萍、邹英姿承前启后。',
+                        名家: '沈寿《蛤蜊图》《耶稣像》；金静芬《水墨苍松》；姚建萍《父亲》系列；双面绣《猫》为经典馆藏。',
+                        现在: '苏州镇湖八千绣娘，产业集群体量庞大；与Dior、名表等品牌合作；数字苏绣博物馆启动，抖音直播带货兴起。',
+                        未来: '建设苏绣数字纹样基因库；元宇宙绣坊；培养青年传承人；探索刺绣与AI设计融合。',
+                        代表作: '双面绣《猫》、仿真绣《耶稣像》',
+                        image: 'images/苏绣《猫》.jpg',
+                        imageWork: '《猫》',
+                        针法基因: ['齐针', '套针', '施针', '乱针绣', '滚针', '接针', '双面绣', '发绣', '精微绣'],
+                        纹样谱系: ['花卉谱系(牡丹/兰/竹)', '动物谱系(猫/金鱼/蝴蝶)', '山水谱系(江南水乡)', '人物谱系(侍女/婴戏)', '百吉谱系(如意/八宝)'],
+                        色彩DNA: [
+                            { name: "三蓝绣", display: "三蓝绣(深蓝/品蓝/月白)" },
+                            { name: "五彩绣", display: "五彩绣(赤/黄/青/黑/白)" },
+                            { name: "水墨绣", display: "水墨绣(墨色渐变)" },
+                            { name: "间色系统", display: "间色系统(牙色/驼色/藕荷)" }
+                        ]
+                    },
+                    xiang: {
+                        name: '湘绣',
+                        技艺: '湘绣起源于湖南民间刺绣，发祥于长沙，是国家级非物质文化遗产、中国四大名绣之一，距今已有两千多年历史。湘绣以“绣花能生香，绣鸟能听声，绣虎能奔跑，绣人能传神”的艺术境界闻名，既保留民间刺绣的质朴韵味，又融合书画笔墨神韵，形成了独树一帜的刺绣体系。湘绣技艺体系庞杂精细，除前文所述九大经典针法外，更有多项独门绝技，兼顾写实质感、艺术美感与工艺难度，是湘绣区别于其他名绣的核心标识，也是非遗传承的关键所在。',
+                        传承: '清代光绪年间，胡莲仙、魏氏创立；杨应修、刘爱云等大师使湘绣以“狮虎”闻名。鬅毛针技法为国家级非遗。',
+                        名家: '杨应修《饮水虎》、刘爱云《雄狮》、李艳《山兽之君》。',
+                        现在: '长沙沙坪湘绣产业园；湘绣研究所；结合现代家居与艺术摆件；与游戏《逆水寒》合作刺绣外观。',
+                        未来: '建立湘绣针法AI辅助教学平台；开发功能化刺绣艺术品；跨界数字时尚。',
+                        代表作: '《饮水虎》《雄狮》',
+                        image: 'images/湘绣《饮水虎》.jpg',
+                        imageWork: '《饮水虎》',
+                        针法基因: ['鬅毛针', '乱掺针', '游针', '隐针', '盖针', '花针', '打子针', '钩针', '扎针'],
+                        纹样谱系: ['瑞兽谱系(狮/虎/龙/凤)', '花卉谱系(牡丹/山茶)', '山水谱系(湘西风光)', '图腾谱系(楚汉云纹/茱萸纹)'],
+                        色彩DNA: ['朱砂', '赭石', '石青', '745种色阶系统', '对比色·补色并置', '矿物色·植物色套染']
+                    },
+                    yue: {
+                        name: '粤绣',
+                        技艺: '粤绣是国家级非物质文化遗产、中国四大名绣之一，发源于广东地区，含潮绣、广绣两大分支，距今已有千年传承历史。粤绣根植于岭南民俗文化与商贸沃土，风格奔放浓烈、富丽堂皇，以针法繁复、用料考究、金碧辉煌著称，既擅长宫廷礼器、祭祀绣品的华贵大气，也兼顾民间日用绣品的实用灵动，形成了独树一帜的岭南刺绣风貌。',
+                        传承: '唐代已有记载；明清外销西洋，风格融合西方审美；林智成、康惠芳等大师传承潮绣。',
+                        名家: '林智成《九龙屏风》、康惠芳《百鸟朝凤》；现代陈少芳广绣艺术。',
+                        现在: '潮绣在戏剧服装、婚庆礼服中仍占主导；与高级定制结合；设立非遗工作站。',
+                        未来: '数字化钉金绣针法库；推动粤绣与当代珠宝设计融合；建设岭南刺绣基因库。',
+                        代表作: '《九龙屏风》《百鸟朝凤》',
+                        image: 'images/粤绣《九龙屏风》.jpg',
+                        imageWork: '《九龙屏风》',
+                        针法基因: ['钉金绣', '垫高绣', '二针企鳞法', '虚卜龙凤绣', '织锦', '编绣', '绕绣', '贴花绣'],
+                        纹样谱系: ['龙凤谱系(龙凤呈祥/龙凤戏珠)', '百鸟谱系(孔雀/凤凰/喜鹊)', '博古器物(八仙/寿星)', '岭南佳果(荔枝/木瓜)'],
+                        色彩DNA: [
+                            { name: "威彩", display: "威彩(高纯度/金碧辉煌)" },
+                            { name: "淡彩", display: "淡彩(雅致含蓄)" },
+                            { name: "金银线混搭", display: "金银线混搭" },
+                            { name: "孔雀羽色系", display: "孔雀羽色系" }
+                        ]
+                    },
+                    shu: {
+                        name: '蜀绣',
+                        技艺: '蜀绣又名川绣，发祥于四川成都，以川西平原为核心传承地，是国家级非物质文化遗产、中国四大名绣之一，距今已有两千余年历史。蜀绣根植于巴蜀文化沃土，兼具民间烟火气与宫廷雅致感，针法严谨细密、色彩明快鲜活，以“针脚平齐、片线光亮、色彩明快、富有画意”著称，题材多贴近生活，花鸟、虫鱼、走兽、山水皆可入绣，形成了独树一帜的西南刺绣风格。',
+                        传承: '源于三星堆，汉代“蜀锦”天下闻名；清代形成行业；郝淑萍、孟德芝等国家级传承人。',
+                        名家: '彭永兴《芙蓉鲤鱼》、郝淑萍《荷花》、孟德芝《蜀绣·九寨沟》。',
+                        现在: '成都蜀绣厂、安靖蜀绣公园；与文旅结合，开发熊猫主题文创；直播电商推广。',
+                        未来: '蜀绣纹样AI生成器；与川剧变脸等非遗联动；打造蜀绣数字纹样库。',
+                        代表作: '《芙蓉鲤鱼》《熊猫》',
+                        image: 'images/蜀绣《芙蓉鲤鱼》.jpg',
+                        imageWork: '《芙蓉鲤鱼》',
+                        针法基因: ['车拧针', '晕针（长短参差）', '锦纹针（编织锦/拉花锦/闩花锦）', '衣锦纹针', '铺针', '纱针', '点彩针'],
+                        纹样谱系: ['鲤鱼谱系(金鳞/墨鳞)', '芙蓉谱系(醉芙蓉/牡丹芙蓉)', '熊猫谱系', '锦纹几何谱系(万字/回纹/龟背)'],
+                        色彩DNA: [
+                            { name: "明快色系", display: "明快色系(朱红/翠绿/宝蓝)" },
+                            { name: "晕染色阶", display: "晕染色阶(同色推移)" },
+                            { name: "锦纹套色", display: "锦纹套色(多色并置)" },
+                            { name: "熟色系统", display: "熟色系统(古铜/皂色)" }
+                        ]
+                    }
+                };
+
+                const modal = document.getElementById('embModal');
+                const closeBtn = document.getElementById('closeModalBtn');
+                const dynamicContent = document.getElementById('modalDynamicContent');
+
+                // 卡片点击事件
+                document.querySelectorAll('.emb-card').forEach(card => {
+                    card.addEventListener('click', function(e) {
+                        const embKey = this.dataset.emb;
+                        const data = pipData[embKey];
+                        if (!data) return;
+
+                        const isXiang = (embKey === 'xiang');
+                        const isSu = (embKey === 'su');
+                        const isShu = (embKey === 'shu');
+                        const isYue = (embKey === 'yue');
+                        let iconClass = 'fa-cat';
+                        if (embKey === 'xiang') iconClass = 'fa-paw';
+                        else if (embKey === 'yue') iconClass = 'fa-dragon';
+                        else if (embKey === 'shu') iconClass = 'fa-fish';
+
+                        // 构建针法基因面板内容
+                        let needlePanelContent = '';
+                        if (isXiang) {
+                            needlePanelContent = `
+                                <div class="stitch-detail-box" id="stitchDetailDisplay">
+                                    <i class="fas fa-info-circle"></i><strong>湘绣针法详解</strong> — 点击上方针法名称查看具体信息
+                                </div>
+                                <div class="gene-grid">
+                                    ${data.针法基因.map(needle => `
+                                        <div class="gene-item stitch-item" data-stitch="${needle}">
+                                            <i class="fas fa-thread"></i>
+                                            <span>${needle}</span>
+                                            <small>传统针法</small>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `;
+                        } else if (isSu) {
+                            needlePanelContent = `
+                                <div class="stitch-detail-box" id="stitchDetailDisplay">
+                                    <i class="fas fa-info-circle"></i><strong>苏绣针法详解</strong> — 点击上方针法名称查看具体信息
+                                </div>
+                                <div class="gene-grid">
+                                    ${data.针法基因.map(needle => `
+                                        <div class="gene-item stitch-item" data-stitch="${needle}">
+                                            <i class="fas fa-thread"></i>
+                                            <span>${needle}</span>
+                                            <small>传统针法</small>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `;
+                        } else if (isShu) {
+                            needlePanelContent = `
+                                <div class="stitch-detail-box" id="stitchDetailDisplay">
+                                    <i class="fas fa-info-circle"></i><strong>蜀绣针法详解</strong> — 点击上方针法名称查看具体信息
+                                </div>
+                                <div class="gene-grid">
+                                    ${data.针法基因.map(needle => `
+                                        <div class="gene-item stitch-item" data-stitch="${needle}">
+                                            <i class="fas fa-thread"></i>
+                                            <span>${needle}</span>
+                                            <small>传统针法</small>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `;
+                        } else if (isYue) {
+                            needlePanelContent = `
+                                <div class="stitch-detail-box" id="stitchDetailDisplay">
+                                    <i class="fas fa-info-circle"></i><strong>粤绣针法详解</strong> — 点击上方针法名称查看具体信息
+                                </div>
+                                <div class="gene-grid">
+                                    ${data.针法基因.map(needle => `
+                                        <div class="gene-item stitch-item" data-stitch="${needle}">
+                                            <i class="fas fa-thread"></i>
+                                            <span>${needle}</span>
+                                            <small>传统针法</small>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `;
+                        } else {
+                            needlePanelContent = `
+                                <div class="gene-grid">
+                                    ${data.针法基因.map(needle => `
+                                        <div class="gene-item">
+                                            <i class="fas fa-thread"></i>
+                                            <span>${needle}</span>
+                                            <small>传统针法</small>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `;
+                        }
+
+                        // 构建色彩DNA面板内容
+                        let colorPanelContent = '';
+                        if (isXiang) {
+                            colorPanelContent = `
+                                <div class="color-detail-box" id="colorDetailDisplay">
+                                    <i class="fas fa-info-circle"></i><strong>湘绣色彩DNA详解</strong> — 点击上方色彩名称查看具体信息
+                                </div>
+                                <div class="gene-grid">
+                                    ${data.色彩DNA.map(color => `
+                                        <div class="gene-item color-item" data-color="${color}">
+                                            <i class="fas fa-palette"></i>
+                                            <span>${color}</span>
+                                            <small>色彩基因</small>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `;
+                        } else if (isSu) {
+                            colorPanelContent = `
+                                <div class="color-detail-box" id="colorDetailDisplay">
+                                    <i class="fas fa-info-circle"></i><strong>苏绣色彩DNA详解</strong> — 点击上方色彩名称查看具体信息
+                                </div>
+                                <div class="gene-grid">
+                                    ${data.色彩DNA.map(c => `
+                                        <div class="gene-item color-item" data-color="${c.name}">
+                                            <i class="fas fa-palette"></i>
+                                            <span>${c.display}</span>
+                                            <small>色彩基因</small>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `;
+                        } else if (isShu) {
+                            colorPanelContent = `
+                                <div class="color-detail-box" id="colorDetailDisplay">
+                                    <i class="fas fa-info-circle"></i><strong>蜀绣色彩DNA详解</strong> — 点击上方色彩名称查看具体信息
+                                </div>
+                                <div class="gene-grid">
+                                    ${data.色彩DNA.map(c => `
+                                        <div class="gene-item color-item" data-color="${c.name}">
+                                            <i class="fas fa-palette"></i>
+                                            <span>${c.display}</span>
+                                            <small>色彩基因</small>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `;
+                        } else if (isYue) {
+                            colorPanelContent = `
+                                <div class="color-detail-box" id="colorDetailDisplay">
+                                    <i class="fas fa-info-circle"></i><strong>粤绣色彩DNA详解</strong> — 点击上方色彩名称查看具体信息
+                                </div>
+                                <div class="gene-grid">
+                                    ${data.色彩DNA.map(c => `
+                                        <div class="gene-item color-item" data-color="${c.name}">
+                                            <i class="fas fa-palette"></i>
+                                            <span>${c.display}</span>
+                                            <small>色彩基因</small>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `;
+                        } else {
+                            colorPanelContent = `
+                                <div class="gene-grid">
+                                    ${data.色彩DNA.map(c => `
+                                        <div class="gene-item">
+                                            <i class="fas fa-palette"></i>
+                                            <span>${c}</span>
+                                            <small>基因色码</small>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `;
+                        }
+
+                        // 构建底部档案信息 (绣种简介、传承故事、名家作品) —— 针对所有绣种特殊处理传承故事
+                        let bottomSections = '';
+                        if (isXiang) {
+                            bottomSections = `
+                                <div class="info-section"><h4><i class="fas fa-paint-brush"></i> 绣种简介</h4><p>${data.技艺}</p></div>
+                                <div class="info-section">
+                                    <h4><i class="fas fa-people-arrows"></i> 传承故事</h4>
+                                    <button class="story-toggle-btn"><i class="fas fa-book-open"></i> 点击展开完整传承故事</button>
+                                    <div class="xiang-story-detail" style="display: none;">
+                                        ${xiangHeritageStories}
+                                    </div>
+                                </div>
+                                <div class="info-section"><h4><i class="fas fa-star"></i> 名家作品</h4><p>${data.名家}</p></div>
+                            `;
+                        } else if (isSu) {
+                            bottomSections = `
+                                <div class="info-section"><h4><i class="fas fa-paint-brush"></i> 绣种简介</h4><p>${data.技艺}</p></div>
+                                <div class="info-section">
+                                    <h4><i class="fas fa-people-arrows"></i> 传承故事</h4>
+                                    <button class="story-toggle-btn"><i class="fas fa-book-open"></i> 点击展开完整传承故事</button>
+                                    <div class="xiang-story-detail" style="display: none;">
+                                        ${suHeritageStories}
+                                    </div>
+                                </div>
+                                <div class="info-section"><h4><i class="fas fa-star"></i> 名家作品</h4><p>${data.名家}</p></div>
+                            `;
+                        } else if (isShu) {
+                            bottomSections = `
+                                <div class="info-section"><h4><i class="fas fa-paint-brush"></i> 绣种简介</h4><p>${data.技艺}</p></div>
+                                <div class="info-section">
+                                    <h4><i class="fas fa-people-arrows"></i> 传承故事</h4>
+                                    <button class="story-toggle-btn"><i class="fas fa-book-open"></i> 点击展开完整传承故事</button>
+                                    <div class="xiang-story-detail" style="display: none;">
+                                        ${shuHeritageStories}
+                                    </div>
+                                </div>
+                                <div class="info-section"><h4><i class="fas fa-star"></i> 名家作品</h4><p>${data.名家}</p></div>
+                            `;
+                        } else if (isYue) {
+                            bottomSections = `
+                                <div class="info-section"><h4><i class="fas fa-paint-brush"></i> 绣种简介</h4><p>${data.技艺}</p></div>
+                                <div class="info-section">
+                                    <h4><i class="fas fa-people-arrows"></i> 传承故事</h4>
+                                    <button class="story-toggle-btn"><i class="fas fa-book-open"></i> 点击展开完整传承故事</button>
+                                    <div class="xiang-story-detail" style="display: none;">
+                                        ${yueHeritageStories}
+                                    </div>
+                                </div>
+                                <div class="info-section"><h4><i class="fas fa-star"></i> 名家作品</h4><p>${data.名家}</p></div>
+                            `;
+                        } else {
+                            bottomSections = `
+                                <div class="info-section"><h4><i class="fas fa-paint-brush"></i> 绣种简介</h4><p>${data.技艺}</p></div>
+                                <div class="info-section"><h4><i class="fas fa-people-arrows"></i> 传承故事</h4><p>${data.传承}</p></div>
+                                <div class="info-section"><h4><i class="fas fa-star"></i> 名家作品</h4><p>${data.名家}</p></div>
+                            `;
+                        }
+
+                        // 完整画中画HTML
+                        const html = `
+                            <div class="pip-grid">
+                                <div class="pip-visual">
+                                    <i class="fas ${iconClass}"></i>
+                                    <div class="img-placeholder">
+                                        <img src="${encodeURI(data.image)}" alt="${data.imageWork}" loading="lazy">
+                                        <span style="margin-top:0.5rem;">名作·${data.imageWork}</span>
+                                    </div>
+                                    <div style="margin-top:1rem;"><i class="fas fa-thread"></i> 国家级非物质文化遗产</div>
+                                </div>
+                                <div style="max-height: 60vh; overflow-y: auto; padding-right: 0.5rem;">
+                                    <h3 style="font-size:2.2rem; color:#822433; margin-bottom:0.5rem;">${data.name}</h3>
+                                    
+                                    <!-- 三大基因标签页 -->
+                                    <div class="gene-tabs">
+                                        <button class="gene-tab active" data-gene="needle">🧬 针法基因</button>
+                                        <button class="gene-tab" data-gene="pattern">📐 纹样谱系</button>
+                                        <button class="gene-tab" data-gene="color">🎨 色彩DNA</button>
+                                    </div>
+                                    
+                                    <!-- 针法基因面板 -->
+                                    <div class="gene-panel active-panel" id="panel-needle">
+                                        ${needlePanelContent}
+                                    </div>
+                                    
+                                    <!-- 纹样谱系面板 -->
+                                    <div class="gene-panel" id="panel-pattern">
+                                        <ul class="lineage-list">
+                                            ${data.纹样谱系.map(p => `
+                                                <li><i class="fas fa-pagelines"></i> ${p}</li>
+                                            `).join('')}
+                                        </ul>
+                                        <p style="margin-top:1rem; background:#e2d4c5; padding:0.5rem; border-radius:20px;">
+                                            <i class="fas fa-dragon"></i> 典型题材：${data.代表题材 || '花鸟虫鱼'}
+                                        </p>
+                                    </div>
+                                    
+                                    <!-- 色彩DNA面板 -->
+                                    <div class="gene-panel" id="panel-color">
+                                        ${colorPanelContent}
+                                    </div>
+                                    
+                                    <!-- 底部档案信息 -->
+                                    <div style="margin-top:1.5rem;">
+                                        ${bottomSections}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                        dynamicContent.innerHTML = html;
+                        modal.style.display = 'flex';
+
+                        // 基因标签切换逻辑
+                        const tabs = document.querySelectorAll('.gene-tab');
+                        const panels = {
+                            needle: document.getElementById('panel-needle'),
+                            pattern: document.getElementById('panel-pattern'),
+                            color: document.getElementById('panel-color')
+                        };
+                        tabs.forEach(tab => {
+                            tab.addEventListener('click', function(e) {
+                                const target = this.dataset.gene;
+                                tabs.forEach(t => t.classList.remove('active'));
+                                this.classList.add('active');
+                                Object.keys(panels).forEach(key => {
+                                    if (panels[key]) panels[key].classList.remove('active-panel');
+                                });
+                                if (target === 'needle' && panels.needle) panels.needle.classList.add('active-panel');
+                                if (target === 'pattern' && panels.pattern) panels.pattern.classList.add('active-panel');
+                                if (target === 'color' && panels.color) panels.color.classList.add('active-panel');
+                            });
+                        });
+
+                        // 湘绣特有交互
+                        if (isXiang) {
+                            // 针法点击显示详情
+                            const stitchItems = dynamicContent.querySelectorAll('.stitch-item');
+                            const stitchDisplay = document.getElementById('stitchDetailDisplay');
+                            stitchItems.forEach(item => {
+                                item.addEventListener('click', function() {
+                                    const stitchName = this.dataset.stitch;
+                                    const detail = xiangStitchDetails[stitchName];
+                                    if (detail && stitchDisplay) {
+                                        stitchDisplay.innerHTML = `
+                                            <i class="fas fa-info-circle" style="color:#822433;"></i> 
+                                            <strong>【定位】</strong> ${detail.定位}<br>
+                                            <strong>【技法特点】</strong> ${detail.特点}<br>
+                                            <strong>【艺术效果】</strong> ${detail.艺术效果}<br>
+                                            <strong>【主要用途】</strong> ${detail.用途}
+                                        `;
+                                    }
+                                });
+                            });
+
+                            // 色彩点击显示详情
+                            const colorItems = dynamicContent.querySelectorAll('.color-item');
+                            const colorDisplay = document.getElementById('colorDetailDisplay');
+                            colorItems.forEach(item => {
+                                item.addEventListener('click', function() {
+                                    const colorName = this.dataset.color;
+                                    const detail = xiangColorDetails[colorName];
+                                    if (detail && colorDisplay) {
+                                        colorDisplay.innerHTML = `
+                                            <i class="fas fa-info-circle" style="color:#822433;"></i> 
+                                            <strong>【${colorName}】</strong><br>
+                                            <strong>定位：</strong> ${detail.定位}<br>
+                                            <strong>特点与应用：</strong> ${detail.特点}
+                                        `;
+                                    } else {
+                                        colorDisplay.innerHTML = `<i class="fas fa-info-circle"></i> 暂无详细描述。`;
+                                    }
+                                });
+                            });
+
+                            // 传承故事按钮切换
+                            const toggleBtn = dynamicContent.querySelector('.story-toggle-btn');
+                            const storyDiv = dynamicContent.querySelector('.xiang-story-detail');
+                            if (toggleBtn && storyDiv) {
+                                toggleBtn.addEventListener('click', function() {
+                                    if (storyDiv.style.display === 'none' || storyDiv.style.display === '') {
+                                        storyDiv.style.display = 'block';
+                                        toggleBtn.innerHTML = '<i class="fas fa-book-close"></i> 收起传承故事';
+                                    } else {
+                                        storyDiv.style.display = 'none';
+                                        toggleBtn.innerHTML = '<i class="fas fa-book-open"></i> 点击展开完整传承故事';
+                                    }
+                                });
+                            }
+                        }
+
+                        // 苏绣特有交互
+                        if (isSu) {
+                            // 针法点击显示详情
+                            const stitchItems = dynamicContent.querySelectorAll('.stitch-item');
+                            const stitchDisplay = document.getElementById('stitchDetailDisplay');
+                            stitchItems.forEach(item => {
+                                item.addEventListener('click', function() {
+                                    const stitchName = this.dataset.stitch;
+                                    const detail = suStitchDetails[stitchName];
+                                    if (detail && stitchDisplay) {
+                                        stitchDisplay.innerHTML = `
+                                            <i class="fas fa-info-circle" style="color:#822433;"></i> 
+                                            <strong>【定位】</strong> ${detail.定位}<br>
+                                            <strong>【技法特点】</strong> ${detail.特点}<br>
+                                            <strong>【艺术效果】</strong> ${detail.艺术效果}<br>
+                                            <strong>【主要用途】</strong> ${detail.用途}
+                                        `;
+                                    }
+                                });
+                            });
+
+                            // 色彩点击显示详情
+                            const colorItems = dynamicContent.querySelectorAll('.color-item');
+                            const colorDisplay = document.getElementById('colorDetailDisplay');
+                            colorItems.forEach(item => {
+                                item.addEventListener('click', function() {
+                                    const colorName = this.dataset.color;
+                                    const detail = suColorDetails[colorName];
+                                    if (detail && colorDisplay) {
+                                        colorDisplay.innerHTML = `
+                                            <i class="fas fa-info-circle" style="color:#822433;"></i> 
+                                            <strong>【${colorName}】</strong><br>
+                                            <strong>色彩特质：</strong> ${detail.色彩特质}<br>
+                                            <strong>配色逻辑：</strong> ${detail.配色逻辑}<br>
+                                            <strong>应用场景：</strong> ${detail.应用场景}
+                                        `;
+                                    } else {
+                                        colorDisplay.innerHTML = `<i class="fas fa-info-circle"></i> 暂无详细描述。`;
+                                    }
+                                });
+                            });
+
+                            // 传承故事按钮切换
+                            const toggleBtn = dynamicContent.querySelector('.story-toggle-btn');
+                            const storyDiv = dynamicContent.querySelector('.xiang-story-detail');
+                            if (toggleBtn && storyDiv) {
+                                toggleBtn.addEventListener('click', function() {
+                                    if (storyDiv.style.display === 'none' || storyDiv.style.display === '') {
+                                        storyDiv.style.display = 'block';
+                                        toggleBtn.innerHTML = '<i class="fas fa-book-close"></i> 收起传承故事';
+                                    } else {
+                                        storyDiv.style.display = 'none';
+                                        toggleBtn.innerHTML = '<i class="fas fa-book-open"></i> 点击展开完整传承故事';
+                                    }
+                                });
+                            }
+                        }
+
+                        // 蜀绣特有交互
+                        if (isShu) {
+                            // 针法点击显示详情
+                            const stitchItems = dynamicContent.querySelectorAll('.stitch-item');
+                            const stitchDisplay = document.getElementById('stitchDetailDisplay');
+                            stitchItems.forEach(item => {
+                                item.addEventListener('click', function() {
+                                    const stitchName = this.dataset.stitch;
+                                    const detail = shuStitchDetails[stitchName];
+                                    if (detail && stitchDisplay) {
+                                        stitchDisplay.innerHTML = `
+                                            <i class="fas fa-info-circle" style="color:#822433;"></i> 
+                                            <strong>【定位】</strong> ${detail.定位}<br>
+                                            <strong>【技法特点】</strong> ${detail.特点}<br>
+                                            <strong>【艺术效果】</strong> ${detail.艺术效果}<br>
+                                            <strong>【主要用途】</strong> ${detail.用途}
+                                        `;
+                                    }
+                                });
+                            });
+
+                            // 色彩点击显示详情
+                            const colorItems = dynamicContent.querySelectorAll('.color-item');
+                            const colorDisplay = document.getElementById('colorDetailDisplay');
+                            colorItems.forEach(item => {
+                                item.addEventListener('click', function() {
+                                    const colorName = this.dataset.color;
+                                    const detail = shuColorDetails[colorName];
+                                    if (detail && colorDisplay) {
+                                        colorDisplay.innerHTML = `
+                                            <i class="fas fa-info-circle" style="color:#822433;"></i> 
+                                            <strong>【${colorName}】</strong><br>
+                                            <strong>色彩特质：</strong> ${detail.色彩特质}<br>
+                                            <strong>配色逻辑：</strong> ${detail.配色逻辑}<br>
+                                            <strong>应用场景：</strong> ${detail.应用场景}
+                                        `;
+                                    } else {
+                                        colorDisplay.innerHTML = `<i class="fas fa-info-circle"></i> 暂无详细描述。`;
+                                    }
+                                });
+                            });
+
+                            // 传承故事按钮切换
+                            const toggleBtn = dynamicContent.querySelector('.story-toggle-btn');
+                            const storyDiv = dynamicContent.querySelector('.xiang-story-detail');
+                            if (toggleBtn && storyDiv) {
+                                toggleBtn.addEventListener('click', function() {
+                                    if (storyDiv.style.display === 'none' || storyDiv.style.display === '') {
+                                        storyDiv.style.display = 'block';
+                                        toggleBtn.innerHTML = '<i class="fas fa-book-close"></i> 收起传承故事';
+                                    } else {
+                                        storyDiv.style.display = 'none';
+                                        toggleBtn.innerHTML = '<i class="fas fa-book-open"></i> 点击展开完整传承故事';
+                                    }
+                                });
+                            }
+                        }
+
+                        // 粤绣特有交互
+                        if (isYue) {
+                            // 针法点击显示详情
+                            const stitchItems = dynamicContent.querySelectorAll('.stitch-item');
+                            const stitchDisplay = document.getElementById('stitchDetailDisplay');
+                            stitchItems.forEach(item => {
+                                item.addEventListener('click', function() {
+                                    const stitchName = this.dataset.stitch;
+                                    const detail = yueStitchDetails[stitchName];
+                                    if (detail && stitchDisplay) {
+                                        stitchDisplay.innerHTML = `
+                                            <i class="fas fa-info-circle" style="color:#822433;"></i> 
+                                            <strong>【定位】</strong> ${detail.定位}<br>
+                                            <strong>【技法特点】</strong> ${detail.特点}<br>
+                                            <strong>【艺术效果】</strong> ${detail.艺术效果}<br>
+                                            <strong>【主要用途】</strong> ${detail.用途}
+                                        `;
+                                    }
+                                });
+                            });
+
+                            // 色彩点击显示详情
+                            const colorItems = dynamicContent.querySelectorAll('.color-item');
+                            const colorDisplay = document.getElementById('colorDetailDisplay');
+                            colorItems.forEach(item => {
+                                item.addEventListener('click', function() {
+                                    const colorName = this.dataset.color;
+                                    const detail = yueColorDetails[colorName];
+                                    if (detail && colorDisplay) {
+                                        colorDisplay.innerHTML = `
+                                            <i class="fas fa-info-circle" style="color:#822433;"></i> 
+                                            <strong>【${colorName}】</strong><br>
+                                            <strong>色彩特质：</strong> ${detail.色彩特质}<br>
+                                            <strong>配色逻辑：</strong> ${detail.配色逻辑}<br>
+                                            <strong>应用场景：</strong> ${detail.应用场景}
+                                        `;
+                                    } else {
+                                        colorDisplay.innerHTML = `<i class="fas fa-info-circle"></i> 暂无详细描述。`;
+                                    }
+                                });
+                            });
+
+                            // 传承故事按钮切换
+                            const toggleBtn = dynamicContent.querySelector('.story-toggle-btn');
+                            const storyDiv = dynamicContent.querySelector('.xiang-story-detail');
+                            if (toggleBtn && storyDiv) {
+                                toggleBtn.addEventListener('click', function() {
+                                    if (storyDiv.style.display === 'none' || storyDiv.style.display === '') {
+                                        storyDiv.style.display = 'block';
+                                        toggleBtn.innerHTML = '<i class="fas fa-book-close"></i> 收起传承故事';
+                                    } else {
+                                        storyDiv.style.display = 'none';
+                                        toggleBtn.innerHTML = '<i class="fas fa-book-open"></i> 点击展开完整传承故事';
+                                    }
+                                });
+                            }
+                        }
+                    });
+                });
+
+                // 关闭模态框
+                closeBtn.addEventListener('click', function() {
+                    modal.style.display = 'none';
+                });
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) modal.style.display = 'none';
+                });
+            });
+        })();
+    </script>
+    <!-- 提示：点击任一绣种卡片即可打开绣种档案。苏绣、湘绣、蜀绣、粤绣均支持针法、色彩点击查看详情，传承故事可展开。 -->
+</body>
+</html>
