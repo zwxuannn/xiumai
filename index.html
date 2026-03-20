@@ -670,17 +670,16 @@
             </div>
         </div>
     </div>
-
-    <!-- AI创新工坊 -->
+    <!-- AI创新工坊 · DeepSeek API 智能生成 -->
     <div class="container">
-        <h2><i class="fas fa-microchip"></i> AI创新工坊 · 纹样智能生成 (演示)</h2>
+        <h2><i class="fas fa-microchip"></i> AI创新工坊 · 纹样智能生成 (DeepSeek API)</h2>
         <div style="background: #e8ddd2; border-radius: 30px; padding: 2rem; text-align: center;">
-            <p style="font-size:1.4rem; margin-bottom:1rem;">点击按钮，随机生成新纹样描述 (模拟AI扩散模型)</p>
+            <p style="font-size:1.4rem; margin-bottom:1rem;">点击按钮，调用DeepSeek大模型生成创意纹样</p>
             <div class="ai-simulate" style="background: #342b26; color: #f1e3d7; display: inline-block; padding: 1.2rem 3rem; border-radius: 60px;">
                 <span id="aiOutput">双鱼吉庆 · 缠枝牡丹纹</span>
-                <button id="generateBtn"><i class="fas fa-wand-magic"></i> 生成</button>
+                <button id="generateBtn"><i class="fas fa-wand-magic"></i> AI生成</button>
             </div>
-            <p style="margin-top:1rem;">风格：清雅苏绣｜色彩：赭石+月白</p>
+            <p style="margin-top:1rem;">✨ 非遗大模型 · 融合苏绣/湘绣/粤绣/蜀绣风格</p>
         </div>
     </div>
 
@@ -1140,12 +1139,59 @@
                     <p>过去，民间绣娘靠着精湛绣艺补贴家用，哪怕岁月变迁，依旧坚守绣台，守护着最质朴的粤绣技艺。如今，越来越多民间绣娘抱团传承，组建非遗工坊，将传统粤绣与现代文创、服饰、家居结合，通过线上平台传播粤绣文化，让高冷的非遗走进寻常百姓家。从白发苍苍的老绣娘到年轻的新生代匠人，她们用针尖坚守，让粤绣文脉在市井烟火中代代延续，绽放出持久的生命力。</p>
                 `;
 
-                // ---------- AI生成随机纹样 ----------
-                const aiSpan = document.getElementById('aiOutput');
-                document.getElementById('generateBtn').addEventListener('click', function() {
-                    const samples = ['缠枝牡丹 · 凤穿花', '海水江崖 · 五福捧寿', '青鸾衔枝 · 如意云纹', '双鱼吉庆 · 缠枝莲', '百花不落地 · 绣球', '狮子滚绣球 · 金玉满堂'];
-                    aiSpan.innerText = samples[Math.floor(Math.random() * samples.length)] + ' (AI生成)';
-                });
+                // ---------- DeepSeek API 智能纹样生成 ----------
+                const DEEPSEEK_API_KEY = "sk-7f19d8c637064d818c42661a7aaefb3e";
+                const API_URL = "https://api.deepseek.com/v1/chat/completions";
+                const generateBtn = document.getElementById('generateBtn');
+                const aiOutputSpan = document.getElementById('aiOutput');
+                const fallbackSamples = ['缠枝牡丹 · 凤穿花', '海水江崖 · 五福捧寿', '青鸾衔枝 · 如意云纹', '双鱼吉庆 · 缠枝莲', '百花不落地 · 绣球', '狮子滚绣球 · 金玉满堂', '瑞鹤衔芝 · 灵芝祥云', '宝相团花 · 缠枝葡萄'];
+
+                async function callDeepSeekGenerate() {
+                    if (!generateBtn) return;
+                    generateBtn.disabled = true;
+                    const originalHtml = generateBtn.innerHTML;
+                    generateBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> 大模型创意中...';
+                    aiOutputSpan.innerText = '✨ 正在调用DeepSeek非遗大模型 ✨';
+                    try {
+                        const response = await fetch(API_URL, {
+                            method: 'POST',
+                            headers: { 
+                                'Content-Type': 'application/json', 
+                                'Authorization': `Bearer ${DEEPSEEK_API_KEY}` 
+                            },
+                            body: JSON.stringify({
+                                model: "deepseek-chat",
+                                messages: [
+                                    { role: "system", content: "你是一位精通中国传统刺绣的非遗专家，擅长苏绣、湘绣、粤绣、蜀绣四大名绣。请根据传统吉祥文化和现代审美，生成一个独特典雅的刺绣纹样名称及简短意境描述。格式：「纹样名称·简短描述」，例如：「双鱼吉庆·缠枝牡丹纹，寓意富贵连绵」。风格融合苏绣雅致或粤绣华美均可，输出仅限纹样描述，45字以内。" },
+                                    { role: "user", content: "请生成一个富有新意、意境优美的中国名绣纹样，融合花鸟、山水或传统吉祥元素。" }
+                                ],
+                                temperature: 0.85,
+                                max_tokens: 100,
+                                top_p: 0.9
+                            })
+                        });
+                        if (!response.ok) throw new Error(`API响应错误 ${response.status}`);
+                        const data = await response.json();
+                        let content = data.choices?.[0]?.message?.content?.trim() || "";
+                        if (content.length === 0) throw new Error("AI未返回内容");
+                        if (content.length > 80) content = content.substring(0, 80) + "…";
+                        aiOutputSpan.innerText = content;
+                    } catch (error) {
+                        console.error("DeepSeek API调用失败:", error);
+                        const randomFallback = fallbackSamples[Math.floor(Math.random() * fallbackSamples.length)];
+                        aiOutputSpan.innerText = `🎋 ${randomFallback} (AI临时降级，本地纹样库)`;
+                    } finally {
+                        generateBtn.disabled = false;
+                        generateBtn.innerHTML = originalHtml;
+                    }
+                }
+
+                // 替换按钮，避免重复绑定旧监听器
+                if (generateBtn) {
+                    const newBtn = generateBtn.cloneNode(true);
+                    generateBtn.parentNode.replaceChild(newBtn, generateBtn);
+                    document.getElementById('generateBtn')?.addEventListener('click', callDeepSeekGenerate);
+                }
 
                 // ---------- 四大名绣数据 ----------
                 const pipData = {
